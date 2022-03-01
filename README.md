@@ -1,13 +1,4 @@
-# CS 499/549 Visual Analytics HW 3
-
-
-You must fill out the following form. Please see Canvas for detailed instructions.
-
----
-- Name: ____ ____
-- URL to video demo: https://..........
-- URL to deployed webpage: https://..........
-- Optional comment: __________
+# Multivariate Data Analyzer
 
 ---
 
