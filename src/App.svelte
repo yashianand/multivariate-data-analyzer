@@ -44,30 +44,40 @@
 	<h1>Visual Analytics HW 3</h1>
 
 	<div id="container">
-		<div id="sidebar" style="width: 450px;">
-			<div id="projection-view" class="view-panel">
-				<div class="view-title">Projection View</div>
-				<svg >
-					
+		<div id="upper-section">
+			<!-- <div id="main-section"> -->
+				<div id="Comparison of The Features" class="view-panel" style="width: 1100px; height: 430px">
+					<div class="view-title">Comparison of The Features over the Wine Qualities</div>
+					<svg >
 
-				</svg>
+
+					</svg>
+				</div>
+			<!-- </div> -->
+			<div id="filter-view" class="view-panel" style="width: 300px;">
+				<div class="view-title">Filter View</div>
+				<div id="selected-image-view-content">
+	
+	
+				</div>
 			</div>
-			<div id="selected-image-view" class="view-panel">
-				<div class="view-title">Selected Image</div>
+		</div>
+		<div id="lower-section">
+			<!-- <div id="sidebar" > -->
+				<div id="efficiency-enhancer" class="view-panel" style="width: 700px; height:250px">
+					<div class="view-title">Efficiency Enhancer Scores</div>
+					<svg >
+						
+
+					</svg>
+				</div>
+			<!-- </div> -->
+			<div id="selected-image-view" class="view-panel" style="width: 700px; height:250px">
+				<div class="view-title">Radar Chart</div>
 				<div id="selected-image-view-content">
 
 
 				</div>
-			</div>
-		</div>
-
-		<div id="main-section" style="width: 1000px;">
-			<div id="score-distributions-view" class="view-panel">
-				<div class="view-title">Score Distributions</div>
-				<svg >
-
-
-				</svg>
 			</div>
 		</div>
 	</div>
@@ -81,10 +91,11 @@
 	}
 	#container {
 		display: flex;
-	}
-	#sidebar, #main-section {
-		display: flex;
 		flex-direction: column;
+	}
+	#upper-section, #lower-section {
+		display: flex;
+		flex-direction: row;
 	}
 	.view-panel {
 		border: 2px solid #eee;
