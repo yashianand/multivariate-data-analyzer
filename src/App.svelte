@@ -12,7 +12,7 @@
 		var marksCanvas = document.getElementById("marksChart");
 
 		var marksData = {
-			labels: ["English", "Maths", "Physics", "Chemistry", "Biology", "History"],
+			labels: ["Alchohol", "Total Sulphur Dioxide", "Density", "Chemistry", "Biology", "History"],
 			datasets: [{
 				label: "Student A",
 				backgroundColor: "rgba(200,0,0,0.2)",
