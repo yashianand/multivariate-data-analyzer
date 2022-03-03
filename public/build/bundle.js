@@ -1654,41 +1654,41 @@ var app = (function () {
     			t9 = space();
     			svg1 = svg_element("svg");
     			attr_dev(h1, "class", "svelte-vsmy66");
-    			add_location(h1, file, 43, 1, 870);
+    			add_location(h1, file, 21, 1, 411);
     			attr_dev(div0, "class", "view-title svelte-vsmy66");
-    			add_location(div0, file, 48, 4, 1025);
+    			add_location(div0, file, 26, 4, 566);
     			attr_dev(svg0, "class", "svelte-vsmy66");
-    			add_location(svg0, file, 49, 4, 1076);
+    			add_location(svg0, file, 27, 4, 617);
     			attr_dev(div1, "id", "projection-view");
     			attr_dev(div1, "class", "view-panel svelte-vsmy66");
-    			add_location(div1, file, 47, 3, 974);
+    			add_location(div1, file, 25, 3, 515);
     			attr_dev(div2, "class", "view-title svelte-vsmy66");
-    			add_location(div2, file, 55, 4, 1174);
+    			add_location(div2, file, 33, 4, 715);
     			attr_dev(div3, "id", "selected-image-view-content");
     			attr_dev(div3, "class", "svelte-vsmy66");
-    			add_location(div3, file, 56, 4, 1224);
+    			add_location(div3, file, 34, 4, 765);
     			attr_dev(div4, "id", "selected-image-view");
     			attr_dev(div4, "class", "view-panel svelte-vsmy66");
-    			add_location(div4, file, 54, 3, 1119);
+    			add_location(div4, file, 32, 3, 660);
     			attr_dev(div5, "id", "sidebar");
     			set_style(div5, "width", "450px");
     			attr_dev(div5, "class", "svelte-vsmy66");
-    			add_location(div5, file, 46, 2, 929);
+    			add_location(div5, file, 24, 2, 470);
     			attr_dev(div6, "class", "view-title svelte-vsmy66");
-    			add_location(div6, file, 65, 4, 1416);
+    			add_location(div6, file, 43, 4, 957);
     			attr_dev(svg1, "class", "svelte-vsmy66");
-    			add_location(svg1, file, 66, 4, 1471);
+    			add_location(svg1, file, 44, 4, 1012);
     			attr_dev(div7, "id", "score-distributions-view");
     			attr_dev(div7, "class", "view-panel svelte-vsmy66");
-    			add_location(div7, file, 64, 3, 1356);
+    			add_location(div7, file, 42, 3, 897);
     			attr_dev(div8, "id", "main-section");
     			set_style(div8, "width", "1000px");
     			attr_dev(div8, "class", "svelte-vsmy66");
-    			add_location(div8, file, 63, 2, 1305);
+    			add_location(div8, file, 41, 2, 846);
     			attr_dev(div9, "id", "container");
     			attr_dev(div9, "class", "svelte-vsmy66");
-    			add_location(div9, file, 45, 1, 905);
-    			add_location(main, file, 42, 0, 861);
+    			add_location(div9, file, 23, 1, 446);
+    			add_location(main, file, 20, 0, 402);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1734,36 +1734,15 @@ var app = (function () {
     	return block;
     }
 
-    const numClasses = 10;
-    const numBins = 10;
-
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
     	let instances;
-    	let binsByClasses = [];
 
     	onMount(async () => {
-    		const fetched = await fetch("static/prediction_results.json");
-    		instances = (await fetched.json()).test_instances;
+    		const fetched = await fetch("static/Wines.json");
+    		instances = (await fetched.json()).data;
     		console.log(instances);
-
-    		// Transform data
-    		for (let k = 0; k < numClasses; ++k) {
-    			let binsForClass = [];
-
-    			for (let b = 0; b < numBins; ++b) {
-    				binsForClass.push({ "class": k, "binNo": b, "instances": [] });
-    			}
-
-    			binsByClasses.push({ "class": k, "bins": binsForClass });
-    		}
-
-    		console.log(binsByClasses);
-
-    		instances.forEach(instance => {
-    			
-    		});
     	});
 
     	const writable_props = [];
@@ -1772,18 +1751,10 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({
-    		onMount,
-    		scaleLinear: linear,
-    		instances,
-    		numClasses,
-    		numBins,
-    		binsByClasses
-    	});
+    	$$self.$capture_state = () => ({ onMount, scaleLinear: linear, instances });
 
     	$$self.$inject_state = $$props => {
     		if ('instances' in $$props) instances = $$props.instances;
-    		if ('binsByClasses' in $$props) binsByClasses = $$props.binsByClasses;
     	};
 
     	if ($$props && "$$inject" in $$props) {
