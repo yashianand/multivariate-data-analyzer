@@ -6,11 +6,37 @@
 	import { onMount } from "svelte";
 	import { scaleLinear } from "d3-scale";
 
+	let instances;
 
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
 		console.log(instances)
+
+
+
+
+
+		var marksCanvas = document.getElementById("marksChart");
+
+		var marksData = {
+			labels: ["English", "Maths", "Physics", "Chemistry", "Biology", "History"],
+			datasets: [{
+				label: "Student A",
+				backgroundColor: "rgba(200,0,0,0.2)",
+				data: [65, 75, 70, 80, 60, 80]
+			}, {
+				label: "Student B",
+				backgroundColor: "rgba(0,0,200,0.2)",
+				data: [54, 65, 60, 70, 70, 75]
+			}]
+		};
+
+		var radarChart = new Chart(marksCanvas, {
+			type: 'radar',
+			data: marksData
+		});
+
 	});
 
 	
@@ -24,10 +50,7 @@
 		<div id="sidebar" style="width: 450px;">
 			<div id="projection-view" class="view-panel">
 				<div class="view-title">Projection View</div>
-				<svg >
-					
-
-				</svg>
+				<canvas id="marksChart" width="600" height="400"></canvas>
 			</div>
 			<div id="selected-image-view" class="view-panel">
 				<div class="view-title">Selected Image</div>
