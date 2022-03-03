@@ -8,32 +8,33 @@
 
 	let instances;
 
-	const numClasses = 10;
-	const numBins = 10;
-	let binsByClasses = [];
+	function setupRadarChart(){
+		var marksCanvas = document.getElementById("marksChart");
+
+		var marksData = {
+			labels: ["English", "Maths", "Physics", "Chemistry", "Biology", "History"],
+			datasets: [{
+				label: "Student A",
+				backgroundColor: "rgba(200,0,0,0.2)",
+				data: [65, 75, 70, 80, 60, 80]
+			}, {
+				label: "Student B",
+				backgroundColor: "rgba(0,0,200,0.2)",
+				data: [54, 65, 60, 70, 70, 75]
+			}]
+		};
+
+		var radarChart = new Chart(marksCanvas, {
+			type: 'radar',
+			data: marksData
+		});
+	}
 
 	onMount(async () => {
-		const fetched = await fetch("static/prediction_results.json");
-		instances = (await fetched.json()).test_instances;
-		console.log(instances);
-
-		// Transform data
-		for (let k = 0; k < numClasses; ++k) {
-			let binsForClass = [];
-			for (let b = 0; b < numBins; ++b) {
-				binsForClass.push({"class": k, "binNo": b, "instances": []});
-			}
-			binsByClasses.push({"class": k, "bins": binsForClass});
-		}
-		console.log(binsByClasses);
-
-		instances.forEach(instance => {
-			
-
-		});
-
-		
-
+		const fetched = await fetch("static/Wines.json");
+		instances = (await fetched.json()).data;
+		console.log(instances)
+		setupRadarChart()
 	});
 
 	
@@ -60,6 +61,10 @@
 	
 	
 				</div>
+		<div id="sidebar" style="width: 450px;">
+			<div id="projection-view" class="view-panel">
+				<div class="view-title">Projection View</div>
+				<canvas id="marksChart" width="600" height="400"></canvas>
 			</div>
 		</div>
 		<div id="lower-section">

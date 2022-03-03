@@ -1614,7 +1614,7 @@ var app = (function () {
     	let div1;
     	let div0;
     	let t3;
-    	let svg0;
+    	let canvas;
     	let t4;
     	let div4;
     	let div2;
@@ -1625,7 +1625,7 @@ var app = (function () {
     	let div7;
     	let div6;
     	let t9;
-    	let svg1;
+    	let svg;
 
     	const block = {
     		c: function create() {
@@ -1639,7 +1639,7 @@ var app = (function () {
     			div0 = element("div");
     			div0.textContent = "Projection View";
     			t3 = space();
-    			svg0 = svg_element("svg");
+    			canvas = element("canvas");
     			t4 = space();
     			div4 = element("div");
     			div2 = element("div");
@@ -1652,43 +1652,45 @@ var app = (function () {
     			div6 = element("div");
     			div6.textContent = "Score Distributions";
     			t9 = space();
-    			svg1 = svg_element("svg");
+    			svg = svg_element("svg");
     			attr_dev(h1, "class", "svelte-vsmy66");
-    			add_location(h1, file, 21, 1, 411);
+    			add_location(h1, file, 46, 1, 926);
     			attr_dev(div0, "class", "view-title svelte-vsmy66");
-    			add_location(div0, file, 26, 4, 574);
-    			attr_dev(svg0, "class", "svelte-vsmy66");
-    			add_location(svg0, file, 27, 4, 625);
+    			add_location(div0, file, 51, 4, 1089);
+    			attr_dev(canvas, "id", "marksChart");
+    			attr_dev(canvas, "width", "600");
+    			attr_dev(canvas, "height", "400");
+    			add_location(canvas, file, 52, 4, 1140);
     			attr_dev(div1, "id", "projection-view");
     			attr_dev(div1, "class", "view-panel svelte-vsmy66");
-    			add_location(div1, file, 25, 3, 523);
+    			add_location(div1, file, 50, 3, 1038);
     			attr_dev(div2, "class", "view-title svelte-vsmy66");
-    			add_location(div2, file, 33, 4, 723);
+    			add_location(div2, file, 55, 4, 1269);
     			attr_dev(div3, "id", "selected-image-view-content");
     			attr_dev(div3, "class", "svelte-vsmy66");
-    			add_location(div3, file, 34, 4, 773);
+    			add_location(div3, file, 56, 4, 1319);
     			attr_dev(div4, "id", "selected-image-view");
     			attr_dev(div4, "class", "view-panel svelte-vsmy66");
-    			add_location(div4, file, 32, 3, 668);
+    			add_location(div4, file, 54, 3, 1214);
     			attr_dev(div5, "id", "sidebar");
     			set_style(div5, "width", "450px");
     			attr_dev(div5, "class", "svelte-vsmy66");
-    			add_location(div5, file, 24, 2, 478);
+    			add_location(div5, file, 49, 2, 993);
     			attr_dev(div6, "class", "view-title svelte-vsmy66");
-    			add_location(div6, file, 43, 4, 965);
-    			attr_dev(svg1, "class", "svelte-vsmy66");
-    			add_location(svg1, file, 44, 4, 1020);
+    			add_location(div6, file, 65, 4, 1511);
+    			attr_dev(svg, "class", "svelte-vsmy66");
+    			add_location(svg, file, 66, 4, 1566);
     			attr_dev(div7, "id", "score-distributions-view");
     			attr_dev(div7, "class", "view-panel svelte-vsmy66");
-    			add_location(div7, file, 42, 3, 905);
+    			add_location(div7, file, 64, 3, 1451);
     			attr_dev(div8, "id", "main-section");
     			set_style(div8, "width", "1000px");
     			attr_dev(div8, "class", "svelte-vsmy66");
-    			add_location(div8, file, 41, 2, 854);
+    			add_location(div8, file, 63, 2, 1400);
     			attr_dev(div9, "id", "container");
     			attr_dev(div9, "class", "svelte-vsmy66");
-    			add_location(div9, file, 23, 1, 454);
-    			add_location(main, file, 20, 0, 402);
+    			add_location(div9, file, 48, 1, 969);
+    			add_location(main, file, 45, 0, 917);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1702,7 +1704,7 @@ var app = (function () {
     			append_dev(div5, div1);
     			append_dev(div1, div0);
     			append_dev(div1, t3);
-    			append_dev(div1, svg0);
+    			append_dev(div1, canvas);
     			append_dev(div5, t4);
     			append_dev(div5, div4);
     			append_dev(div4, div2);
@@ -1713,7 +1715,7 @@ var app = (function () {
     			append_dev(div8, div7);
     			append_dev(div7, div6);
     			append_dev(div7, t9);
-    			append_dev(div7, svg1);
+    			append_dev(div7, svg);
     		},
     		p: noop,
     		i: noop,
@@ -1743,6 +1745,25 @@ var app = (function () {
     		const fetched = await fetch("static/Wines.json");
     		instances = (await fetched.json()).data;
     		console.log(instances);
+    		var marksCanvas = document.getElementById("marksChart");
+
+    		var marksData = {
+    			labels: ["English", "Maths", "Physics", "Chemistry", "Biology", "History"],
+    			datasets: [
+    				{
+    					label: "Student A",
+    					backgroundColor: "rgba(200,0,0,0.2)",
+    					data: [65, 75, 70, 80, 60, 80]
+    				},
+    				{
+    					label: "Student B",
+    					backgroundColor: "rgba(0,0,200,0.2)",
+    					data: [54, 65, 60, 70, 70, 75]
+    				}
+    			]
+    		};
+
+    		new Chart(marksCanvas, { type: 'radar', data: marksData });
     	});
 
     	const writable_props = [];
