@@ -8,7 +8,7 @@
 	import { scaleLinear } from "d3-scale";
 
 	let instances;
-	let bins = {};
+	let wineQualities = {};
 	const numClasses = 6;
 
 	function setupRadarChart(){
@@ -36,15 +36,15 @@
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
-		console.log(instances)
 		setupRadarChart()
 		for (let k = 3; k < numClasses+3; ++k) {
-			bins[k] = []
+			wineQualities[k] = []
 		}
 		instances.forEach(instance => {
-			bins[instance.quality].push(instance)
+			wineQualities[instance.quality].push(instance)
 		});
-		console.log(bins)
+		console.log('All instances: ', instances)
+		console.log('Wine Qualities: ', wineQualities)
 	});
 
 	
