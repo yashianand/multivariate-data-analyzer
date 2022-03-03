@@ -13,27 +13,7 @@
 	let binsByClasses = [];
 
 	onMount(async () => {
-		const fetched = await fetch("static/prediction_results.json");
-		instances = (await fetched.json()).test_instances;
-		console.log(instances);
-
-		// Transform data
-		for (let k = 0; k < numClasses; ++k) {
-			let binsForClass = [];
-			for (let b = 0; b < numBins; ++b) {
-				binsForClass.push({"class": k, "binNo": b, "instances": []});
-			}
-			binsByClasses.push({"class": k, "bins": binsForClass});
-		}
-		console.log(binsByClasses);
-
-		instances.forEach(instance => {
-			
-
-		});
-
 		
-
 	});
 
 	
