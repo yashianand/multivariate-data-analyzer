@@ -50,10 +50,13 @@
 		});
 	}
 
+	function setupParallelCoordinates(){
+		//TODO
+	}
+
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
-		setupRadarChart()
 		for (let k = 3; k < numClasses+3; ++k) {
 			wineQualities[k] = {
 				'instances': []
@@ -62,6 +65,8 @@
 		instances.forEach(instance => {
 			wineQualities[instance.quality]['instances'].push(instance)
 		});
+		setupRadarChart()
+		setupParallelCoordinates()
 		console.log('All instances: ', instances)
 		console.log('Wine Qualities: ', wineQualities)
 	});
@@ -89,6 +94,8 @@
 								<input type="text"/>
 							</foreignObject>
 						{/each}
+						<rect x="10" y="310" width="300" height="30" fill="red"></rect>
+						<text x="90" y="330" width="300" height="30" fill="white">Predict Quality</text>
 					</svg>
 				</div>
 			</div>
@@ -123,6 +130,8 @@
 		border: 2px solid #eee;
 		margin-bottom: 15px;
 		margin-right: 15px;
+		height: 70%;
+		width: 98%;
 	}
 	.view-title {
 		background-color: #f3f3f3;
