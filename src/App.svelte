@@ -8,12 +8,10 @@
 
 	let instances;
 
-	const numClasses = 10;
-	const numBins = 10;
-	let binsByClasses = [];
-
 	onMount(async () => {
-		
+		const fetched = await fetch("static/Wines.json");
+		instances = (await fetched.json()).data;
+		console.log(instances)
 	});
 
 	
