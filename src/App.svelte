@@ -74,8 +74,8 @@
 
 	<div id="container">
 		<div id="sidebar" style="width: 450px;">
-			<div id="projection-view" class="view-panel">
-				<div class="view-title">Projection View</div>
+			<div id="radar-view" class="view-panel">
+				<div class="view-title">Radar Chart</div>
 				<canvas id="marksChart" width="600" height="400"></canvas>
 			</div>
 			<div id="selected-image-view" class="view-panel">
