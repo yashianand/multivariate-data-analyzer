@@ -9,6 +9,7 @@
 
 	let instances;
 	let wineQualities = {};
+	let averageFeatures = {}
 	const numClasses = 6;
 
 	function setupRadarChart(){
@@ -38,10 +39,18 @@
 		instances = (await fetched.json()).data;
 		setupRadarChart()
 		for (let k = 3; k < numClasses+3; ++k) {
-			wineQualities[k] = []
+			wineQualities[k] = {
+				'instances': [],
+				'Average Alchohol': 0,
+				'Average Total Sulphur Dioxide': 0,
+				'Average Density': 0,
+				'Average Volatile Acidity': 0,
+				'Average PH': 0,
+				'Average Citric Acid': 0
+			}
 		}
 		instances.forEach(instance => {
-			wineQualities[instance.quality].push(instance)
+			wineQualities[instance.quality]['instances'].push(instance)
 		});
 		console.log('All instances: ', instances)
 		console.log('Wine Qualities: ', wineQualities)
