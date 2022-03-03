@@ -8,15 +8,7 @@
 
 	let instances;
 
-	onMount(async () => {
-		const fetched = await fetch("static/Wines.json");
-		instances = (await fetched.json()).data;
-		console.log(instances)
-
-
-
-
-
+	function setupRadarChart(){
 		var marksCanvas = document.getElementById("marksChart");
 
 		var marksData = {
@@ -36,7 +28,13 @@
 			type: 'radar',
 			data: marksData
 		});
+	}
 
+	onMount(async () => {
+		const fetched = await fetch("static/Wines.json");
+		instances = (await fetched.json()).data;
+		console.log(instances)
+		setupRadarChart()
 	});
 
 	
