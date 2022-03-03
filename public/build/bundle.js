@@ -1631,7 +1631,7 @@ var app = (function () {
     		c: function create() {
     			main = element("main");
     			h1 = element("h1");
-    			h1.textContent = "Multivariate Dataset Analyzer";
+    			h1.textContent = "Visual Analytics Term Project";
     			t1 = space();
     			div9 = element("div");
     			div5 = element("div");
