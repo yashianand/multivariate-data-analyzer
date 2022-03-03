@@ -9,7 +9,6 @@
 
 	let instances;
 	let wineQualities = {};
-	let averageFeatures = {}
 	const numClasses = 6;
 
 	function setupRadarChart(){
@@ -20,11 +19,27 @@
 			datasets: [{
 				label: "Quality 8",
 				backgroundColor: "rgba(200,0,0,0.2)",
-				data: [65, 75, 70, 80, 60, 80]
+				data: [1, 0.5917909543, 0.9977424972, 0.4786131524, 0.9615133085, 1]
 			}, {
 				label: "Quality 7",
 				backgroundColor: "rgba(0,0,200,0.2)",
-				data: [54, 65, 60, 70, 70, 75]
+				data: [0.9480313834, 0.6196717882, 0.9986368143, 0.4566643279, 0.9684384252, 0.9592565098]
+			}, {
+				label: "Quality 6",
+				backgroundColor: "rgba(100,20,150,0.2)",
+				data: [0.8788761964,0.7231826107,0.9991489043,0.5624469486,0.9764779577,0.700119336]
+			}, {
+				label: "Quality 5",
+				backgroundColor: "rgba(0,0,120,0.2)",
+				data: [0.8185333654, 1, 0.9996387108, 0.6523924432, 0.9726158343, 0.6230601722]
+			}, {
+				label: "Quality 4",
+				backgroundColor: "rgba(200,0,120,0.2)",
+				data: [0.848744594, 0.6413510818, 0.9990761098, 0.7845814179, 0.9951469788, 0.4452722985]
+			}, {
+				label: "Quality 3",
+				backgroundColor: "rgba(200,2000,120,0.2)",
+				data: [0.8231051906, 0.4405991789, 1, 1, 1, 0.4372159091]
 			}]
 		};
 
@@ -40,13 +55,7 @@
 		setupRadarChart()
 		for (let k = 3; k < numClasses+3; ++k) {
 			wineQualities[k] = {
-				'instances': [],
-				'Average Alchohol': 0,
-				'Average Total Sulphur Dioxide': 0,
-				'Average Density': 0,
-				'Average Volatile Acidity': 0,
-				'Average PH': 0,
-				'Average Citric Acid': 0
+				'instances': []
 			}
 		}
 		instances.forEach(instance => {
