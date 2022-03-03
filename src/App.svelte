@@ -8,6 +8,8 @@
 	import { scaleLinear } from "d3-scale";
 
 	let instances;
+	let bins = {};
+	const numClasses = 6;
 
 	function setupRadarChart(){
 		var marksCanvas = document.getElementById("marksChart");
@@ -15,11 +17,11 @@
 		var marksData = {
 			labels: ["Alchohol", "Total Sulphur Dioxide", "Density", "Volatile Acidity", "PH", "Citric Acid"],
 			datasets: [{
-				label: "Student A",
+				label: "Quality 8",
 				backgroundColor: "rgba(200,0,0,0.2)",
 				data: [65, 75, 70, 80, 60, 80]
 			}, {
-				label: "Student B",
+				label: "Quality 7",
 				backgroundColor: "rgba(0,0,200,0.2)",
 				data: [54, 65, 60, 70, 70, 75]
 			}]
@@ -36,6 +38,13 @@
 		instances = (await fetched.json()).data;
 		console.log(instances)
 		setupRadarChart()
+		for (let k = 3; k < numClasses+3; ++k) {
+			bins[k] = []
+		}
+		instances.forEach(instance => {
+			bins[instance.quality].push(instance)
+		});
+		console.log(bins)
 	});
 
 	
