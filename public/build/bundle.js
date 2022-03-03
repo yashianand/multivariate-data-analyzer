@@ -1654,41 +1654,41 @@ var app = (function () {
     			t9 = space();
     			svg1 = svg_element("svg");
     			attr_dev(h1, "class", "svelte-vsmy66");
-    			add_location(h1, file, 21, 1, 411);
+    			add_location(h1, file, 20, 1, 394);
     			attr_dev(div0, "class", "view-title svelte-vsmy66");
-    			add_location(div0, file, 26, 4, 566);
+    			add_location(div0, file, 25, 4, 549);
     			attr_dev(svg0, "class", "svelte-vsmy66");
-    			add_location(svg0, file, 27, 4, 617);
+    			add_location(svg0, file, 26, 4, 600);
     			attr_dev(div1, "id", "projection-view");
     			attr_dev(div1, "class", "view-panel svelte-vsmy66");
-    			add_location(div1, file, 25, 3, 515);
+    			add_location(div1, file, 24, 3, 498);
     			attr_dev(div2, "class", "view-title svelte-vsmy66");
-    			add_location(div2, file, 33, 4, 715);
+    			add_location(div2, file, 32, 4, 698);
     			attr_dev(div3, "id", "selected-image-view-content");
     			attr_dev(div3, "class", "svelte-vsmy66");
-    			add_location(div3, file, 34, 4, 765);
+    			add_location(div3, file, 33, 4, 748);
     			attr_dev(div4, "id", "selected-image-view");
     			attr_dev(div4, "class", "view-panel svelte-vsmy66");
-    			add_location(div4, file, 32, 3, 660);
+    			add_location(div4, file, 31, 3, 643);
     			attr_dev(div5, "id", "sidebar");
     			set_style(div5, "width", "450px");
     			attr_dev(div5, "class", "svelte-vsmy66");
-    			add_location(div5, file, 24, 2, 470);
+    			add_location(div5, file, 23, 2, 453);
     			attr_dev(div6, "class", "view-title svelte-vsmy66");
-    			add_location(div6, file, 43, 4, 957);
+    			add_location(div6, file, 42, 4, 940);
     			attr_dev(svg1, "class", "svelte-vsmy66");
-    			add_location(svg1, file, 44, 4, 1012);
+    			add_location(svg1, file, 43, 4, 995);
     			attr_dev(div7, "id", "score-distributions-view");
     			attr_dev(div7, "class", "view-panel svelte-vsmy66");
-    			add_location(div7, file, 42, 3, 897);
+    			add_location(div7, file, 41, 3, 880);
     			attr_dev(div8, "id", "main-section");
     			set_style(div8, "width", "1000px");
     			attr_dev(div8, "class", "svelte-vsmy66");
-    			add_location(div8, file, 41, 2, 846);
+    			add_location(div8, file, 40, 2, 829);
     			attr_dev(div9, "id", "container");
     			attr_dev(div9, "class", "svelte-vsmy66");
-    			add_location(div9, file, 23, 1, 446);
-    			add_location(main, file, 20, 0, 402);
+    			add_location(div9, file, 22, 1, 429);
+    			add_location(main, file, 19, 0, 385);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1737,7 +1737,6 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
-    	let instances;
 
     	onMount(async () => {
     		const fetched = await fetch("static/Wines.json");
@@ -1751,16 +1750,7 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ onMount, scaleLinear: linear, instances });
-
-    	$$self.$inject_state = $$props => {
-    		if ('instances' in $$props) instances = $$props.instances;
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
+    	$$self.$capture_state = () => ({ onMount, scaleLinear: linear });
     	return [];
     }
 

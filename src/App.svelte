@@ -6,7 +6,6 @@
 	import { onMount } from "svelte";
 	import { scaleLinear } from "d3-scale";
 
-	let instances;
 
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
