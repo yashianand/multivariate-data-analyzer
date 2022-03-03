@@ -8,10 +8,32 @@
 
 	let instances;
 
+	const numClasses = 10;
+	const numBins = 10;
+	let binsByClasses = [];
+
 	onMount(async () => {
-		const fetched = await fetch("static/Wines.json");
-		instances = (await fetched.json()).data;
-		console.log(instances)
+		const fetched = await fetch("static/prediction_results.json");
+		instances = (await fetched.json()).test_instances;
+		console.log(instances);
+
+		// Transform data
+		for (let k = 0; k < numClasses; ++k) {
+			let binsForClass = [];
+			for (let b = 0; b < numBins; ++b) {
+				binsForClass.push({"class": k, "binNo": b, "instances": []});
+			}
+			binsByClasses.push({"class": k, "bins": binsForClass});
+		}
+		console.log(binsByClasses);
+
+		instances.forEach(instance => {
+			
+
+		});
+
+		
+
 	});
 
 	
@@ -19,33 +41,43 @@
 </script>
 
 <main>
-	<h1>Visual Analytics Term Project</h1>
+	<h1>Visual Analytics HW 3</h1>
 
 	<div id="container">
-		<div id="sidebar" style="width: 450px;">
-			<div id="projection-view" class="view-panel">
-				<div class="view-title">Projection View</div>
-				<svg >
-					
+		<div id="upper-section">
+			<!-- <div id="main-section"> -->
+				<div id="Comparison of The Features" class="view-panel" style="width: 1100px; height: 430px">
+					<div class="view-title">Comparison of The Features over the Wine Qualities</div>
+					<svg >
 
-				</svg>
+
+					</svg>
+				</div>
+			<!-- </div> -->
+			<div id="filter-view" class="view-panel" style="width: 300px;">
+				<div class="view-title">Filter View</div>
+				<div id="selected-image-view-content">
+	
+	
+				</div>
 			</div>
-			<div id="selected-image-view" class="view-panel">
-				<div class="view-title">Selected Image</div>
+		</div>
+		<div id="lower-section">
+			<!-- <div id="sidebar" > -->
+				<div id="efficiency-enhancer" class="view-panel" style="width: 700px; height:250px">
+					<div class="view-title">Efficiency Enhancer Scores</div>
+					<svg >
+						
+
+					</svg>
+				</div>
+			<!-- </div> -->
+			<div id="selected-image-view" class="view-panel" style="width: 700px; height:250px">
+				<div class="view-title">Radar Chart</div>
 				<div id="selected-image-view-content">
 
 
 				</div>
-			</div>
-		</div>
-
-		<div id="main-section" style="width: 1000px;">
-			<div id="score-distributions-view" class="view-panel">
-				<div class="view-title">Score Distributions</div>
-				<svg >
-
-
-				</svg>
 			</div>
 		</div>
 	</div>
@@ -59,10 +91,11 @@
 	}
 	#container {
 		display: flex;
-	}
-	#sidebar, #main-section {
-		display: flex;
 		flex-direction: column;
+	}
+	#upper-section, #lower-section {
+		display: flex;
+		flex-direction: row;
 	}
 	.view-panel {
 		border: 2px solid #eee;
