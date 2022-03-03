@@ -19,7 +19,7 @@
 </script>
 
 <main>
-	<h1>Visual Analytics HW 3</h1>
+	<h1>Visual Analytics Term Project</h1>
 
 	<div id="container">
 		<div id="sidebar" style="width: 450px;">
