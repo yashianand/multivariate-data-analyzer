@@ -2,20 +2,11 @@
 	import { onMount } from "svelte";
 	import { scaleLinear, scaleOrdinal } from "d3-scale";
 	import { schemeCategory10 } from "d3-scale-chromatic";
-	import { tSNE } from "./tsne";
 
 	let instances = [];
 	let wineQualities = {};
 	let features = ["Alchohol", "Total Sulphur Dioxide", "Density", "Volatile Acidity", "PH", "Citric Acid", "Fixed Acidity", "Residual Sugar", "Chlorides", "Free Sulfur Dioxide", "Sulphates"]
 	const numClasses = 6;
-
-	// tSNE variable definitions
-	let instance_features = [];
-	let projection = [];
-	let xScale, yScale;
-	let canvasSizeProjection = 300;
-	let colorScale;
-	// tSNE definitions end here
 
 	function setupRadarChart(){
 		var marksCanvas = document.getElementById("marksChart");
@@ -59,28 +50,6 @@
 		//TODO
 	}
 
-	function setupTSNE() {
-		let opt = {epsilon: 10}; // epsilon is learning rate (10 = default)
-		let tsne = new tSNE(opt); // create a tSNE instance
-
-		// initialize data. Here we have 3 points and some example pairwise dissimilarities
-		for (let i in instances) {
-			let value = []
-			for (let key in instances[i]) {
-				if (key !== "Id" && key!== "quality") {
-					value.push(instances[i][key])
-				}
-			}
-			instance_features.push(value)
-		}
-		tsne.initDataRaw(instance_features);
-
-		for(let k = 0; k < 500; k++) {
-		tsne.step(); // every time you call this, solution gets better
-		}
-		projection = tsne.getSolution(); // projection is an array of 2-D points that you can plot
-	}
-
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
@@ -97,22 +66,6 @@
 		console.log('All instances: ', instances)
 		console.log('Wine Qualities: ', wineQualities)
 
-		setupTSNE()
-		console.log('tSNE Projections: ', projection)
-		xScale = scaleLinear()
-			.domain([
-				0,
-				Math.max(...projection.map(record => record[0]))
-			])
-			.range([0, canvasSizeProjection]);
-		yScale = scaleLinear()
-			.domain([
-				Math.min(...projection.map(record => record[1])),
-				Math.max(...projection.map(record => record[1]))])
-			.range([0, canvasSizeProjection]);
-
-			colorScale = scaleOrdinal(schemeCategory10)
-			.domain(instances.map(row => row["quality"]));
 
 	});
 
@@ -157,15 +110,6 @@
 			<div id="tSNE-projection-view" class="view-panel">
 				<div class="view-title">tSNE Projection View</div>
 				<svg class="view-tsne" x="1000" y="100">
-					{#each instances as record}
-						<circle
-							style="fill: {colorScale(record["quality"])};"
-							cx={xScale(projection[record['Id']][0])+350}
-							cy={yScale(projection[record['Id']][1])+50}
-							r='3'
-							opacity= '0.4'
-						/>
-					{/each}
 				</svg>
 			</div>
 		</div>
