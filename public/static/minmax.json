@@ -1,67 +1,54 @@
-[
-  {
-    "": "id",
+{
+  "id": {
     "Min": 1,
     "Max": 1599
   },
-  {
-    "": "fixed acidity",
+  "fixed acidity": {
     "Min": 4.6,
     "Max": 15.9
   },
-  {
-    "": "volatile acidity",
+  "volatile acidity": {
     "Min": 0.12,
     "Max": 1.58
   },
-  {
-    "": "citric acid",
+  "citric acid": {
     "Min": 0,
     "Max": 1
   },
-  {
-    "": "residual sugar",
+  "residual sugar": {
     "Min": 0.9,
     "Max": 15.5
   },
-  {
-    "": "chlorides",
+  "chlorides": {
     "Min": 0.012,
     "Max": 0.611
   },
-  {
-    "": "free sulfur dioxide",
+  "free sulfur dioxide": {
     "Min": 1,
     "Max": 72
   },
-  {
-    "": "total sulfur dioxide",
+  "total sulfur dioxide": {
     "Min": 6,
     "Max": 289
   },
-  {
-    "": "density",
+  "density": {
     "Min": 0.99007,
     "Max": 1.00369
   },
-  {
-    "": "pH",
+  "pH": {
     "Min": 2.74,
     "Max": 4.01
   },
-  {
-    "": "sulphates",
+  "sulphates": {
     "Min": 0.33,
     "Max": 2
   },
-  {
-    "": "alcohol",
+  "alcohol": {
     "Min": 8.4,
     "Max": 14.9
   },
-  {
-    "": "quality",
+  "quality": {
     "Min": 3,
     "Max": 8
   }
-]
+}
