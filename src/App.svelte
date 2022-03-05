@@ -9,7 +9,7 @@
 
 	let instances;
 	let wineQualities = {};
-	let features = ["Alchohol", "Total Sulphur Dioxide", "Density", "Volatile Acidity", "PH", "Citric Acid", "Fixed Acidity", "Residual Sugar", "Chlorides", "Free Sulfur Dioxide", "Sulphates", "Quality"]
+	let features = ["Alcohol", "Total sulfur dioxide", "Density", "Volatile Acidity", "PH", "Citric Acid", "Fixed Acidity", "Residual Sugar", "Chlorides", "Free Sulfur Dioxide", "Sulphates", "Quality"]
 	let minMax;
 	const numClasses = 6;
 
@@ -52,9 +52,9 @@
 	}
 
 	function setupParallelCoordinates(){
-		// set the dimensions and margins of the graph
+		// set the features and margins of the graph
 		const margin = {top: 30, right: 50, bottom: 10, left: 50},
-		width = 460 - margin.left - margin.right,
+		width = 860 - margin.left - margin.right,
 		height = 400 - margin.top - margin.bottom;
 
 		// append the svg object to the body of the page
@@ -71,18 +71,17 @@
 
 			// Color scale: give me a specie name, I return a color
 			const color = d3.scaleOrdinal()
-				.domain(["Quality 8", "versicolor", "virginica" ])
-				.range([ "#440154ff", "#21908dff", "#fde725ff"])
+				.domain(["Quality 8", "Quality 7", "Quality 6" ])
+				.range([ "#red", "#21908dff", "#fde725ff"])
 
 			// Here I set the list of dimension manually to control the order of axis:
-			var dimensions = ["Petal_Length", "Petal_Width", "Sepal_Length", "Sepal_Width"]
-			var domains = [[0,8], [0,10], [0,20], [0,30]]
 			// For each dimension, I build a linear scale. I store all in a y object
 			const y = {}
-			for (const i in dimensions) {
-				var name = dimensions[i]
+			for (const i in features) {
+				var name = features[i]
+				var mima = minMax[name.toLowerCase()]
 				y[name] = d3.scaleLinear()
-				.domain( domains[i] ) // --> Same axis range for each group
+				.domain( [mima.Min,mima.Max] ) // --> Same axis range for each group
 				// --> different axis range for each group --> .domain( [d3.extent(data, function(d) { return +d[name]; })] )
 				// .domain( [d3.extent(data, function(d) { return +d[name]; })] )
 				.range([height, 0])
@@ -91,7 +90,7 @@
 			// Build the X scale -> it find the best position for each Y axis
 			var x = d3.scalePoint()
 				.range([0, width])
-				.domain(dimensions);
+				.domain(features);
 
 			// Highlight the specie that is hovered
 			const highlight = function(event, d){
@@ -120,7 +119,7 @@
 
 			// The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
 			function path(d) {
-				return d3.line()(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
+				return d3.line()(features.map(function(p) { return [x(p), y[p](d[p])]; }));
 			}
 
 			// Draw the lines
@@ -139,7 +138,7 @@
 			// Draw the axis:
 			svg.selectAll("myAxis")
 				// For each dimension of the dataset I add a 'g' element:
-				.data(dimensions).enter()
+				.data(features).enter()
 				.append("g")
 				.attr("class", "axis")
 				// I translate this element to its right position on the x axis
