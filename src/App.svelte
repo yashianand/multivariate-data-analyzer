@@ -10,6 +10,7 @@
 	let instances;
 	let wineQualities = {};
 	let features = ["Alchohol", "Total Sulphur Dioxide", "Density", "Volatile Acidity", "PH", "Citric Acid", "Fixed Acidity", "Residual Sugar", "Chlorides", "Free Sulfur Dioxide", "Sulphates", "Quality"]
+	let minMax;
 	const numClasses = 6;
 
 	function setupRadarChart(){
@@ -158,6 +159,11 @@
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
+
+		const fetched2 = await fetch("static/minmax.json");
+		minMax = (await fetched2.json())
+
+		console.log(minMax)
 		for (let k = 3; k < numClasses+3; ++k) {
 			wineQualities[k] = {
 				'instances': []
