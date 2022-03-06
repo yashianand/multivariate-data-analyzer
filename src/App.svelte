@@ -50,6 +50,7 @@
 		});
 	}
 
+
 	function setupParallelCoordinates(){
 		//TODO
 	}
@@ -87,15 +88,16 @@
 			<div id="input-view" class="view-panel">
 				<div class="view-title">Input View</div>
 				<div id="input-view-content">
-					<svg height="340">
+					<svg height="400" width="441">
 						{#each features as label,i}
 							<text x="10" y="{i*30+15}" width="80%" height="10">{label}</text>
-							<foreignObject x="170" y="{i*30}" width="170" height="20">
-								<input type="text"/>
-							</foreignObject>
+							<foreignObject x="170" y="{i*30}" width="170" height="30">
+									<input type="range" min="0" max="30" value="0" class="slider" id="myRange">
+								</foreignObject>
+								<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
 						{/each}
-						<rect x="10" y="310" width="300" height="30" fill="red"></rect>
-						<text x="90" y="330" width="300" height="30" fill="white">Predict Quality</text>
+						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
+						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
 					</svg>
 				</div>
 			</div>
@@ -140,7 +142,7 @@
 		padding: 3px 4px 4px 4px;
 	}
 	#input-view-content {
-		height: 370px;
+		height: 400px;
 	}
 
 
