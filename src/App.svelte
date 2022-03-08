@@ -209,7 +209,9 @@
 		</div>
 
 		<div id="main-section" style="width: 1000px;">
-
+			<div id="parcoord-view" class="view-panel">
+				<div class="view-title">Parallel Coordinates</div>
+			</div>
 		</div>
 	</div>
 </main>
