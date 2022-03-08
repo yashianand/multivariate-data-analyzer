@@ -254,33 +254,31 @@
 			</div>
 		</div>
 		<div id="main-section" style="width: 1000px;">
-			{#if comparison_values.length !== 0}
-				<div id="parcoord-view" class="view-panel">
-					<div class="view-title">Parallel Coordinates</div>
-				</div>
-				<div id="comparison-view" class="view-panel" style="width: 1000px;">
-					<div class="view-title">Compare Wine Quality</div>
-						<svg viewbox="-100 -100 450 150">
-							<g transform="translate(-95, -85)" id="comp-view">
-								{#if instances !== undefined}
-									{#each comparison_values as val}
-										<!-- <text>{val.quality}</text> -->
-										{#each Object.entries(val) as [comp_val_key, comp_val]}
-											{value = comp_val}
-											<g transform="translate(10, 10)">
-												<line x1='0' y1='0' x2='50' y2='0'/>
-												<!-- {#each yScaleTicks as tick}
+			<div id="parcoord-view" class="view-panel">
+				<div class="view-title">Parallel Coordinates</div>
+			</div>
+			<div id="comparison-view" class="view-panel" style="width: 1000px;">
+				<div class="view-title">Compare Wine Quality</div>
+					<svg viewbox="-100 -100 450 150">
+						<g transform="translate(-95, -85)" id="comp-view">
+							{#if instances !== undefined}
+								{#each comparison_values as val}
+									<!-- <text>{val.quality}</text> -->
+									{#each Object.entries(val) as [comp_val_key, comp_val]}
+										{value = comp_val}
+										<g transform="translate(10, 10)">
+											<line x1='0' y1='0' x2='50' y2='0'/>
+											<!-- {#each yScaleTicks as tick}
 
-												{/each} -->
-											</g>
-										{/each}
+											{/each} -->
+										</g>
 									{/each}
-								{/if}
+								{/each}
+							{/if}
 
-							</g>
-						</svg>
-				</div>
-			{/if}
+						</g>
+					</svg>
+			</div>
 		</div>
 	</div>
 </main>
