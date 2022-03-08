@@ -77,8 +77,8 @@
 				var name = features[i]
 				var mima = minMax[name]
 				y[name] = d3.scaleLinear()
-				// .domain( [Math.floor(mima.Min), Math.ceil(mima.Max)] ) 
-				.domain( [mima.Min, mima.Max] ) 
+				// .domain( [Math.floor(mima.Min), Math.ceil(mima.Max)] )
+				.domain( [mima.Min, mima.Max] )
 				.range([height, 0])
 			}
 
@@ -114,7 +114,7 @@
 			// The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
 			function path(d) {
 				return d3.line()(features.map(
-					function(p) { 
+					function(p) {
 						return [x(p), y[p](d[p])];
 					}
 				));
@@ -209,18 +209,7 @@
 		</div>
 
 		<div id="main-section" style="width: 1000px;">
-<<<<<<< Updated upstream
-			<div id="parallel-coordinates-view" class="view-panel">
-=======
-			<div id="parcoord-view" class="view-panel">
->>>>>>> Stashed changes
-				<div class="view-title">Parallel Coordinates</div>
-			</div>
-			<div id="tSNE-projection-view" class="view-panel">
-				<div class="view-title">tSNE Projection View</div>
-				<svg class="view-tsne" x="1000" y="100">
-				</svg>
-			</div>
+
 		</div>
 	</div>
 </main>
@@ -254,15 +243,4 @@
 	#input-view-content {
 		height: 400px;
 	}
-	.view-tsne {
-		width: 800px;
-		height: 400px;
-	}
-
-<<<<<<< Updated upstream
-
-
 </style>
-=======
-</style>
->>>>>>> Stashed changes
