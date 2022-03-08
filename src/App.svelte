@@ -102,7 +102,7 @@
 				.style("opacity", "0.2")
 				// Second the hovered specie takes its color
 				d3.selectAll(".line" + selected_quality)
-				.transition().duration(200)
+				.transition().duration(20)
 				.style("stroke", color(selected_quality))
 				.style("opacity", "1")
 			}
