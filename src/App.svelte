@@ -1,5 +1,5 @@
 
-<!-- 
+<!--
 	This is the skeleton code provided by Prof. Minsuk Kahng.
 	Please feel free to revise the existing code.
 -->
@@ -81,8 +81,8 @@
 				var name = features[i]
 				var mima = minMax[name]
 				y[name] = d3.scaleLinear()
-				// .domain( [Math.floor(mima.Min), Math.ceil(mima.Max)] ) 
-				.domain( [mima.Min, mima.Max] ) 
+				// .domain( [Math.floor(mima.Min), Math.ceil(mima.Max)] )
+				.domain( [mima.Min, mima.Max] )
 				.range([height, 0])
 			}
 
@@ -118,7 +118,7 @@
 			// The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
 			function path(d) {
 				return d3.line()(features.map(
-					function(p) { 
+					function(p) {
 						return [x(p), y[p](d[p])];
 					}
 				));
@@ -179,7 +179,7 @@
 		console.log('Wine Qualities: ', wineQualities)
 	});
 
-	
+
 
 </script>
 
