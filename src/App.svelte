@@ -5,7 +5,8 @@
 
 	let instances = [];
 	let wineQualities = {};
-	let features = ["Alchohol", "Total Sulphur Dioxide", "Density", "Volatile Acidity", "PH", "Citric Acid", "Fixed Acidity", "Residual Sugar", "Chlorides", "Free Sulfur Dioxide", "Sulphates"]
+	let features = ["alcohol", "total sulfur dioxide", "density", "volatile acidity", "pH", "citric acid", "fixed acidity", "residual sugar", "chlorides", "free sulfur dioxide", "sulphates", "quality"]
+	let minMax;
 	const numClasses = 6;
 
 	function setupRadarChart(){
@@ -46,13 +47,120 @@
 		});
 	}
 
+
 	function setupParallelCoordinates(){
-		//TODO
+		// set the features and margins of the graph
+		const margin = {top: 30, right: 50, bottom: 10, left: 50},
+		width = 860 - margin.left - margin.right,
+		height = 400 - margin.top - margin.bottom;
+
+		// append the svg object to the body of the page
+		const svg = d3.select("#parcoord-view")
+		.append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform",
+				`translate(${margin.left},${margin.top})`);
+
+		// Parse the Data
+		d3.csv("static/winequality-red.csv").then( function(data) {
+			// Color scale: give me a specie name, I return a color
+			const color = d3.scaleOrdinal()
+				.domain(["8", "7", "6" , "5", "4", "3"])
+				.range([ "red", "pink", "green", "cyan", "yellow", "blue"])
+
+			// Here I set the list of dimension manually to control the order of axis:
+			// For each dimension, I build a linear scale. I store all in a y object
+			const y = {}
+			for (const i in features) {
+				var name = features[i]
+				var mima = minMax[name]
+				y[name] = d3.scaleLinear()
+				// .domain( [Math.floor(mima.Min), Math.ceil(mima.Max)] ) 
+				.domain( [mima.Min, mima.Max] ) 
+				.range([height, 0])
+			}
+
+			// Build the X scale -> it find the best position for each Y axis
+			var x = d3.scalePoint()
+				.range([0, width])
+				.domain(features);
+
+			// Highlight the specie that is hovered
+			const highlight = function(event, d){
+				var selected_quality = d.quality
+
+				// first every group turns grey
+				d3.selectAll(".line")
+				.transition().duration(200)
+				.style("stroke", "lightgrey")
+				.style("opacity", "0.2")
+				// Second the hovered specie takes its color
+				d3.selectAll(".line" + selected_quality)
+				.transition().duration(200)
+				.style("stroke", color(selected_quality))
+				.style("opacity", "1")
+			}
+
+			// Unhighlight
+			const doNotHighlight = function(event, d){
+				d3.selectAll(".line")
+				.transition().duration(200).delay(1000)
+				.style("stroke", function(d){ return( color(d.quality))} )
+				.style("opacity", "1")
+			}
+
+			// The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
+			function path(d) {
+				return d3.line()(features.map(
+					function(p) { 
+						return [x(p), y[p](d[p])];
+					}
+				));
+			}
+
+			// Draw the lines
+			svg
+				.selectAll("myPath")
+				.data(data)
+				.join("path")
+				.attr("class", function (d) { return "line " + d.quality } ) // 2 class for each line: 'line' and the group name
+				.attr("d",  path)
+				.style("fill", "none" )
+				.style("stroke", function(d){ return( color(d.quality))} )
+				.style("opacity", 0.5)
+				.on("mouseover", highlight)
+				.on("mouseleave", doNotHighlight )
+
+			// Draw the axis:
+			svg.selectAll("myAxis")
+				// For each dimension of the dataset I add a 'g' element:
+				.data(features).enter()
+				.append("g")
+				.attr("class", "axis")
+				// I translate this element to its right position on the x axis
+				.attr("transform", function(d) { return `translate(${x(d)})`})
+				// And I build the axis with the call function
+				.each(function(d) { d3.select(this).call(d3.axisLeft().ticks(5).scale(y[d])); })
+				// Add axis title
+				.append("text")
+				.style("text-anchor", "middle")
+				.attr("y", -9)
+				.text(function(d) { return d; })
+				.style("fill", "black")
+
+		})
 	}
 
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
+
+		const fetched2 = await fetch("static/minmax.json");
+		minMax = (await fetched2.json())
+
+		console.log(minMax)
 		for (let k = 3; k < numClasses+3; ++k) {
 			wineQualities[k] = {
 				'instances': []
@@ -85,27 +193,28 @@
 			<div id="input-view" class="view-panel">
 				<div class="view-title">Input View</div>
 				<div id="input-view-content">
-					<svg height="340">
+					<svg height="400" width="441">
 						{#each features as label,i}
 							<text x="10" y="{i*30+15}" width="80%" height="10">{label}</text>
-							<foreignObject x="170" y="{i*30}" width="170" height="20">
-								<input type="text"/>
-							</foreignObject>
+							<foreignObject x="170" y="{i*30}" width="170" height="30">
+									<input type="range" min="0" max="30" value="0" class="slider" id="myRange">
+								</foreignObject>
+								<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
 						{/each}
-						<rect x="10" y="310" width="300" height="30" fill="red"></rect>
-						<text x="90" y="330" width="300" height="30" fill="white">Predict Quality</text>
+						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
+						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
 					</svg>
 				</div>
 			</div>
 		</div>
 
 		<div id="main-section" style="width: 1000px;">
+<<<<<<< Updated upstream
 			<div id="parallel-coordinates-view" class="view-panel">
+=======
+			<div id="parcoord-view" class="view-panel">
+>>>>>>> Stashed changes
 				<div class="view-title">Parallel Coordinates</div>
-				<svg >
-
-
-				</svg>
 			</div>
 			<div id="tSNE-projection-view" class="view-panel">
 				<div class="view-title">tSNE Projection View</div>
@@ -143,13 +252,17 @@
 		padding: 3px 4px 4px 4px;
 	}
 	#input-view-content {
-		height: 370px;
+		height: 400px;
 	}
 	.view-tsne {
 		width: 800px;
 		height: 400px;
 	}
 
+<<<<<<< Updated upstream
 
 
 </style>
+=======
+</style>
+>>>>>>> Stashed changes
