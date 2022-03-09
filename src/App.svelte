@@ -1,18 +1,18 @@
-
-<!-- 
-	This is the skeleton code provided by Prof. Minsuk Kahng.
-	Please feel free to revise the existing code.
--->
 <script>
 	import { onMount } from "svelte";
-	import { scaleLinear } from "d3-scale";
+	import { scaleLinear, scaleOrdinal } from "d3-scale";
+	import { schemeCategory10 } from "d3-scale-chromatic";
 
 	let instances;
 	let wineQualities = {};
 	let features = ["alcohol", "total sulfur dioxide", "density", "volatile acidity", "pH", "citric acid", "fixed acidity", "residual sugar", "chlorides", "free sulfur dioxide", "sulphates", "quality"]
 	let minMax;
 	let selectedToggle = 0
+	let comparison_values = [];
+	let value;
+	let xScale, xScaleTicks, yScale, yScaleTicks;
 	const numClasses = 6;
+
 
 	function setupRadarChart(){
 		var marksCanvas = document.getElementById("marksChart");
@@ -82,8 +82,8 @@
 				var name = features[i]
 				var mima = minMax[name]
 				y[name] = d3.scaleLinear()
-				// .domain( [Math.floor(mima.Min), Math.ceil(mima.Max)] ) 
-				.domain( [mima.Min, mima.Max] ) 
+				// .domain( [Math.floor(mima.Min), Math.ceil(mima.Max)] )
+				.domain( [mima.Min, mima.Max] )
 				.range([height, 0])
 			}
 
@@ -111,7 +111,7 @@
 			// Unhighlight
 			const doNotHighlight = function(event, d){
 				d3.selectAll(".line")
-				.transition().duration(200).delay(100)
+				.transition().duration(200).delay(1000)
 				.style("stroke", function(d){ return( color(d.quality))} )
 				.style("opacity", "1")
 			}
@@ -119,7 +119,7 @@
 			// The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
 			function path(d) {
 				return d3.line()(features.map(
-					function(p) { 
+					function(p) {
 						return [x(p), y[p](d[p])];
 					}
 				));
@@ -158,6 +158,42 @@
 		})
 	}
 
+	function setupComparisonView() {
+		for (let k = 3; k < numClasses+3; ++k){
+			let average_value = {};
+			average_value['quality'] = k
+			instances.forEach(instance => {
+				if(instance['Id'] == k) {
+					for (let key in instance) {
+						if (key !== 'Id' && key !== 'quality'){
+							average_value[key] = 0
+						}
+					}
+				}
+			})
+
+
+			instances.forEach(instance => {
+				if(instance['quality'] == k) {
+					for (let key in instance) {
+						if (key !== 'Id' && key !== 'quality'){
+							// console.log("here: ", instance['Id'], key, instance[key], )
+							average_value[key] += Number(instance[key])
+						}
+					}
+				}
+			})
+
+			for (let i in average_value) {
+				if (i !== 'quality') {
+					let num = average_value[i] / wineQualities[k]['instances'].length
+					average_value[i] = Math.round((num + Number.EPSILON) * 100) / 100
+				}
+			}
+			comparison_values.push(average_value)
+		}
+	}
+
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
@@ -178,14 +214,22 @@
 		setupParallelCoordinates()
 		console.log('All instances: ', instances)
 		console.log('Wine Qualities: ', wineQualities)
+        setupComparisonView()
+        comparison_values = comparison_values
+        console.log("Comparison Values: ", comparison_values)
+        yScale = scaleLinear().domain([0, value]).range([0, 100])
+		yScaleTicks = yScale.ticks(5)
+
+		xScale = scaleLinear().range([0, 50])
+		xScaleTicks = xScale.ticks(2)
 	});
 
-	
+
 
 </script>
 
 <main>
-	<h1>Group 2</h1>
+	<h1>Multivariate Data Analyzer</h1>
 
 	<div id="container">
 		<div id="sidebar" style="width: 450px;">
@@ -210,7 +254,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div id="main-section" style="width: 1000px;">
 			<div id="parcoord-view" class="view-panel">
 				<div class="view-title">Parallel Coordinates</div>
@@ -220,6 +263,28 @@
 				<input type="radio" id="avg" name="fav_language" value="avg" on:click={()=>{
 					selectedToggle = 1
 				}}> Show Average Lines Per Quality
+			</div>
+			<div id="comparison-view" class="view-panel" style="width: 1000px;">
+				<div class="view-title">Compare Wine Quality</div>
+					<svg viewbox="-100 -100 450 150">
+						<g transform="translate(-95, -85)" id="comp-view">
+							{#if instances !== undefined}
+								{#each comparison_values as val}
+									<!-- <text>{val.quality}</text> -->
+									{#each Object.entries(val) as [comp_val_key, comp_val]}
+										{value = comp_val}
+										<g transform="translate(10, 10)">
+											<line x1='0' y1='0' x2='50' y2='0'/>
+											<!-- {#each yScaleTicks as tick}
+
+											{/each} -->
+										</g>
+									{/each}
+								{/each}
+							{/if}
+
+						</g>
+					</svg>
 			</div>
 		</div>
 	</div>
@@ -254,5 +319,7 @@
 	#input-view-content {
 		height: 400px;
 	}
-
+	#comp-view {
+		font-size: 0.5rem;
+	}
 </style>
