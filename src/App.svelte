@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import { scaleLinear, scaleOrdinal } from "d3-scale";
 	import { schemeCategory10 } from "d3-scale-chromatic";
+import { object_without_properties } from "svelte/internal";
 
 	let instances;
 	let wineQualities = {};
@@ -12,7 +13,7 @@
 	let value;
 	let xScale, xScaleTicks, yScale, yScaleTicks;
 	let colors = ["#A50F15", "#DE2D26", "#FB6A4A", "#FC9272", "#FCBBA1", "#FEE5D9"]
-	let filteredClasses = [false, false, false, false, false, false] //by default we are showing all the classes
+	$: filteredClasses = [] //by default we are showing all the classes
 	const numClasses = 6;
 
 
@@ -73,7 +74,18 @@
 		// Parse the Data
 		var data;
 		if (selectedToggle == 0) {
-			data = instances
+			data = instances.filter(function (sample){
+				// return sample.quality == 8
+				// for (let sample_val in sample) {
+				// 	if (sample_val.quality in filteredClasses) {
+				// 		console.log("in filtered classes array")
+				// 	}
+				// 	else {
+				// 		return sample_val.quality
+				// 	}
+				// }
+				return !filteredClasses.includes(sample.quality)
+			});
 		} else {
 			data = comparison_values
 		}
@@ -204,7 +216,8 @@
 	}
 
 	function filterClass(selectedClass){
-		filteredClasses[selectedClass] = !filteredClasses[selectedClass]
+		selectedClass = (selectedClass).toString()
+		filteredClasses.includes(selectedClass)? filteredClasses.splice(filteredClasses.indexOf(selectedClass), 1) : filteredClasses.push(selectedClass)
 		console.log(filteredClasses)
 	}
 
@@ -224,16 +237,14 @@
 		instances.forEach(instance => {
 			wineQualities[instance.quality]['instances'].push(instance)
 		});
-		console.log('All instances: ', instances)
-		console.log('Wine Qualities: ', wineQualities)
         setupComparisonView()
         comparison_values = comparison_values
-        console.log("Comparison Values: ", comparison_values)
         yScale = scaleLinear().domain([0, value]).range([0, 100])
 		yScaleTicks = yScale.ticks(5)
 		
 		xScale = scaleLinear().range([0, 50])
 		xScaleTicks = xScale.ticks(2)
+		console.log('filtered classes', filteredClasses)
 		setupRadarChart()
 		setupParallelCoordinates()
 	});
@@ -289,8 +300,11 @@
 						{#each colors as color, i}
 							<rect x=0 y={(i+1)*30} width=20 height=20 fill={color} ></rect>
 							<text x="25" y={200 - (i*31)} class="small">{i + 3}</text>
-							<image x=0 y={(i+1)*30} href={filteredClasses[i]? "" : "static/black-checkmark.png"} height="20" width="20" on:click={()=>{
-								filterClass(i)
+							<image x=0 y={(i+1)*30} href={filteredClasses.includes((i+3).toString())? "" : "static/black-checkmark.png"} height="20" width="20" on:click={()=>{
+								console.log('i: ', i)
+								filterClass(8-i)
+								document.getElementById("parallel").innerHTML = ""
+								setupParallelCoordinates();
 							}}/>
 						{/each}
 					</svg>
