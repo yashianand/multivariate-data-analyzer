@@ -11,7 +11,6 @@
 	let comparison_values = [];
 	let value;
 	let xScale, xScaleTicks, yScale, yScaleTicks;
-	let filename;
 	const numClasses = 6;
 
 
