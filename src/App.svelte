@@ -247,6 +247,7 @@
 								</foreignObject>
 								<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
 						{/each}
+						
 						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
 						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
 					</svg>
