@@ -7,8 +7,11 @@
 	let wineQualities = {};
 	let features = ["alcohol", "total sulfur dioxide", "density", "volatile acidity", "pH", "citric acid", "fixed acidity", "residual sugar", "chlorides", "free sulfur dioxide", "sulphates", "quality"]
 	let minMax;
+	let minmax;
+	let feature;
 	let comparison_values = [];
 	let value;
+	let j=0;
 	let xScale, xScaleTicks, yScale, yScaleTicks;
 	const numClasses = 6;
 
@@ -193,6 +196,15 @@
 		}
 	}
 
+	function calminMax(feature){
+		for (j in minMax, j++) {
+			var mn=minMax[feature].Min
+			var mx=minMax[feature].Max
+			console.log(mn)
+			console.log(mx)
+			return(mx)
+	}};
+
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
@@ -240,16 +252,67 @@
 				<div class="view-title">Input View</div>
 				<div id="input-view-content">
 					<svg height="400" width="441">
-						{#each features as label,i}
-							<text x="10" y="{i*30+15}" width="80%" height="10">{label}</text>
-							<foreignObject x="170" y="{i*30}" width="170" height="30">
-									<input type="range" min="0" max="30" value="0" class="slider" id="myRange">
-								</foreignObject>
-								<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
-						{/each}
-						
-						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
-						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
+						<!-- {#each features as label,i} -->
+							<text x="10" y="{1*30+15}" width="80%" height="10">alcohol</text>
+							<foreignObject x="170" y="{1*30}" width="170" height="30">
+								<input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+								<output x="350" y="{1*30+20}" width="80%" height="10">20</output>
+							</foreignObject>
+							<text x="10" y="{2*30+15}" width="80%" height="10">total sulfur dioxide</text>
+                            <foreignObject x="170" y="{2*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{2*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+                            <text x="10" y="{3*30+15}" width="80%" height="10">density</text>
+                            <foreignObject x="170" y="{3*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{3*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+                            <text x="10" y="{4*30+15}" width="80%" height="10">volatile acidity</text>
+                            <foreignObject x="170" y="{4*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{4*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+                            <text x="10" y="{5*30+15}" width="80%" height="10">pH</text>
+                            <foreignObject x="170" y="{5*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{5*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+							<text x="10" y="{6*30+15}" width="80%" height="10">citric acid</text>
+                            <foreignObject x="170" y="{6*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{6*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+                            <text x="10" y="{7*30+15}" width="80%" height="10">fixed acidity</text>
+                            <foreignObject x="170" y="{7*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{7*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+							<text x="10" y="{8*30+15}" width="80%" height="10">residual sugar</text>
+                            <foreignObject x="170" y="{8*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{8*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+							<text x="10" y="{9*30+15}" width="80%" height="10">chlorides</text>
+                            <foreignObject x="170" y="{9*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{9*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+							<text x="10" y="{10*30+15}" width="80%" height="10">free sulfur dioxide</text>
+                            <foreignObject x="170" y="{10*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{10*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+                            <text x="10" y="{11*30+15}" width="80%" height="10">fixed acidity</text>
+                            <foreignObject x="170" y="{11*30}" width="170" height="30">
+                                <input type="range" value="20" min="14" max="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value">
+                                <output x="350" y="{11*30+20}" width="80%" height="10"></output>
+                            </foreignObject>
+								
+								<!-- <text x="350" y="{i*30+20}" width="80%" height="10">0</text> -->
+						<!-- {/each} -->
+						<rect x="10" y="370" width="300" height="30" fill="red"></rect>
+						<text x="90" y="390" width="300" height="30" fill="white">Predict Quality</text>
 					</svg>
 				</div>
 			</div>
