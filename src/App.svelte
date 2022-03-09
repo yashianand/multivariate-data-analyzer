@@ -11,6 +11,7 @@
 	let wineQualities = {};
 	let features = ["alcohol", "total sulfur dioxide", "density", "volatile acidity", "pH", "citric acid", "fixed acidity", "residual sugar", "chlorides", "free sulfur dioxide", "sulphates", "quality"]
 	let minMax;
+	let selectedToggle = 0
 	const numClasses = 6;
 
 	function setupRadarChart(){
@@ -213,6 +214,12 @@
 		<div id="main-section" style="width: 1000px;">
 			<div id="parcoord-view" class="view-panel">
 				<div class="view-title">Parallel Coordinates</div>
+				<input type="radio" id="all" name="fav_language" value="all" style="margin-left: 35px;" checked="checked" on:click={()=>{
+					selectedToggle = 0
+				}}> Show All Data Lines
+				<input type="radio" id="avg" name="fav_language" value="avg" on:click={()=>{
+					selectedToggle = 1
+				}}> Show Average Lines Per Quality
 			</div>
 		</div>
 	</div>
