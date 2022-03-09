@@ -11,6 +11,7 @@
 	let comparison_values = [];
 	let value;
 	let xScale, xScaleTicks, yScale, yScaleTicks;
+	let colors = ["#A50F15", "#DE2D26", "#FB6A4A", "#FC9272", "#FCBBA1", "#FEE5D9"]
 	const numClasses = 6;
 
 
@@ -56,8 +57,8 @@
 	function setupParallelCoordinates(){
 		console.log('comp:', comparison_values)
 		// set the features and margins of the graph
-		const margin = {top: 10, right: 50, bottom: 10, left: 50},
-		width = 860 - margin.left - margin.right,
+		const margin = {top: 10, right: 5, bottom: 10, left: 30},
+		width = 850 - margin.left - margin.right,
 		height = 400 - margin.top - margin.bottom;
 
 		// append the svg object to the body of the page
@@ -81,7 +82,7 @@
 		// Color scale: give me a specie name, I return a color
 		const color = d3.scaleOrdinal()
 			.domain(["8", "7", "6" , "5", "4", "3"])
-			.range([ "red", "pink", "green", "cyan", "yellow", "blue"])
+			.range(colors)
 
 		// Here I set the list of dimension manually to control the order of axis:
 		// For each dimension, I build a linear scale. I store all in a y object
@@ -106,7 +107,7 @@
 
 			// first every group turns grey
 			d3.selectAll(".line")
-			.transition().duration(200)
+			.transition().duration(20)
 			.style("stroke", "lightgrey")
 			.style("opacity", "0.2")
 			// Second the hovered specie takes its color
@@ -119,7 +120,7 @@
 		// Unhighlight
 		const doNotHighlight = function(event, d){
 			d3.selectAll(".line")
-			.transition().duration(200).delay(1000)
+			.transition().duration(50).delay(0)
 			.style("stroke", function(d){ return( color(d.quality))} )
 			.style("opacity", "1")
 		}
@@ -143,7 +144,8 @@
 			.attr("d",  path)
 			.style("fill", "none" )
 			.style("stroke", function(d){ return( color(d.quality))} )
-			.style("opacity", 0.7)
+			.style("stroke-width", 5)
+			.style("opacity", 0.6)
 			.on("mouseover", highlight)
 			.on("mouseleave", doNotHighlight )
 
@@ -275,7 +277,15 @@
 					document.getElementById("parallel").innerHTML = ""
 					setupParallelCoordinates()
 				}}> Show Average Lines Per Quality
-				<div id="parallel"></div>
+				<div id="parallel" style="float: left;"></div>
+				<div style="float: right;">
+					<svg width=110 height=300>
+						<text x="0" y="20" class="small">Filter Classes</text>
+						{#each colors as color, i}
+							<rect x=0 y={(i+1)*30} width=20 height=20 fill={color}></rect>
+						{/each}
+					</svg>
+				</div>
 			</div>
 			<div id="comparison-view" class="view-panel" style="width: 1000px;">
 				<div class="view-title">Compare Wine Quality</div>
