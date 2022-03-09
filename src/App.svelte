@@ -12,6 +12,7 @@
 	let value;
 	let xScale, xScaleTicks, yScale, yScaleTicks;
 	let colors = ["#A50F15", "#DE2D26", "#FB6A4A", "#FC9272", "#FCBBA1", "#FEE5D9"]
+	let filteredClasses = [false, false, false, false, false, false] //by default we are showing all the classes
 	const numClasses = 6;
 
 
@@ -52,7 +53,6 @@
 			data: marksData
 		});
 	}
-
 
 	function setupParallelCoordinates(){
 		console.log('comp:', comparison_values)
@@ -203,6 +203,11 @@
 		}
 	}
 
+	function filterClass(selectedClass){
+		filteredClasses[selectedClass] = !filteredClasses[selectedClass]
+		console.log(filteredClasses)
+	}
+
 	onMount(async () => {
 		const fetched = await fetch("static/Wines.json");
 		instances = (await fetched.json()).data;
@@ -282,7 +287,11 @@
 					<svg width=110 height=300>
 						<text x="0" y="20" class="small">Filter Classes</text>
 						{#each colors as color, i}
-							<rect x=0 y={(i+1)*30} width=20 height=20 fill={color}></rect>
+							<rect x=0 y={(i+1)*30} width=20 height=20 fill={color} ></rect>
+							<text x="25" y={200 - (i*31)} class="small">{i + 3}</text>
+							<image x=0 y={(i+1)*30} href={filteredClasses[i]? "" : "static/black-checkmark.png"} height="20" width="20" on:click={()=>{
+								filterClass(i)
+							}}/>
 						{/each}
 					</svg>
 				</div>
