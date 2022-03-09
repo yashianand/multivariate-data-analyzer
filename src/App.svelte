@@ -12,6 +12,7 @@
 	let value;
 	let xScale, xScaleTicks, yScale, yScaleTicks;
 	let colors = ["#A50F15", "#DE2D26", "#FB6A4A", "#FC9272", "#FCBBA1", "#FEE5D9"]
+	let chartSpread, chartSpreadTicks;
 	const numClasses = 6;
 
 
@@ -69,7 +70,7 @@
 		.append("g")
 		.attr("transform",
 				`translate(${margin.left},${margin.top})`);
-		
+
 		// Parse the Data
 		var data;
 		if (selectedToggle == 0) {
@@ -224,13 +225,20 @@
         setupComparisonView()
         comparison_values = comparison_values
         console.log("Comparison Values: ", comparison_values)
-        yScale = scaleLinear().domain([0, value]).range([0, 100])
-		yScaleTicks = yScale.ticks(5)
-		
-		xScale = scaleLinear().range([0, 50])
-		xScaleTicks = xScale.ticks(2)
 		setupRadarChart()
 		setupParallelCoordinates()
+
+		yScale = scaleLinear().range([0, 500])
+		yScaleTicks = yScale.ticks(5)
+
+
+
+		xScale = scaleLinear().range([0, 10])
+		xScaleTicks = xScale.ticks(1)
+
+		chartSpread = scaleLinear().range([0, 40])
+		chartSpreadTicks = chartSpread.ticks(10)
+
 	});
 
 
@@ -263,10 +271,10 @@
 				</div>
 			</div>
 		</div>
-		<div id="main-section" style="width: 1000px;">
-			<div id="parcoord-view" class="view-panel">
+		<div id="main-section" style="width: 980px;">
+			<div id="parcoord-view" class="view-panel" >
 				<div class="view-title">Parallel Coordinates</div>
-				
+
 				<input type="radio" id="all" name="fav_language" value="all" style="margin-left: 35px;" checked="checked" on:click={()=>{
 					selectedToggle = 0
 					document.getElementById("parallel").innerHTML = ""
@@ -287,22 +295,40 @@
 					</svg>
 				</div>
 			</div>
-			<div id="comparison-view" class="view-panel" style="width: 1000px;">
+			<div id="comparison-view" class="view-panel" style="width: 980px;">
 				<div class="view-title">Compare Wine Quality</div>
 					<svg viewbox="-100 -100 450 150">
 						<g transform="translate(-95, -85)" id="comp-view">
 							{#if instances !== undefined}
 								{#each comparison_values as val}
 									<!-- <text>{val.quality}</text> -->
-									{#each Object.entries(val) as [comp_val_key, comp_val]}
-										{value = comp_val}
-										<g transform="translate(10, 10)">
-											<line x1='0' y1='0' x2='50' y2='0'/>
-											<!-- {#each yScaleTicks as tick}
 
-											{/each} -->
-										</g>
-									{/each}
+										{#each Object.entries(val) as [comp_val_key, comp_val], index}
+											{#if features[index]==comp_val_key && comp_val_key !== 'quality'}
+												<g transform="translate({chartSpread(index-1)+10}, 125)">
+													<line id="axis" x1='-10' y1='-10' x2='30' y2='-10'/>
+													<text style="font-size: 5px;" >{comp_val_key}</text>
+												</g>
+											{/if}
+
+											<!-- <g transform="translate({chartSpread(cs_tick)+20}, 20)">
+												{#each xScaleTicks as x_tick}
+													<g transform="translate({xScale(x_tick)}, 0)">
+														{#each Object.entries(val) as [comp_val_key, comp_val]}
+															<text>{comp_val_key}}</text>
+														{/each}
+													</g>
+												{/each}
+											</g> -->
+										{/each}
+										<!-- {yScale.domain([0, comp_val])}
+															{console.log(value)}
+															<text>{comp_val_key}</text>
+															{#each yScaleTicks as y_tick}
+																<g transform="translate(0, {yScale(y_tick)})">
+																	<text style="font-size: 5px;">{y_tick}</text>
+																</g>
+															{/each} -->
 								{/each}
 							{/if}
 
@@ -344,5 +370,8 @@
 	}
 	#comp-view {
 		font-size: 0.5rem;
+	}
+	#axis {
+		stroke: black;
 	}
 </style>
