@@ -45,8 +45,10 @@
 	
 
 	function changeSlider(value, x){
-		console.log('value changed: ', value)
-		slider_values = slider_values
+		let slider_id = value.target.id
+		let slider_value = value.target.value
+		var output = document.getElementById("output" + slider_id.slice(6));
+		output.innerHTML = slider_value;
 	}
 
 	function predictPressed(){
@@ -423,7 +425,7 @@
 							<text x="15" y="{i*30+18}" width="80%" height="10">{label}</text>
 							{#if slider_values !== undefined}
 								<!-- <text id="demo" x="350" y="{i*30+20}" width="80%" height="10">{slider_values[i]}</text> -->
-								<text id="demo" x="350" y="{i*30+20}" width="80%" height="10">0</text>
+								<text id={"output-" + label} x="350" y="{i*30+20}" width="80%" height="10">0</text>
 
 							{/if}
 							<foreignObject x="170" y="{i*30}" width="170" height="30">
