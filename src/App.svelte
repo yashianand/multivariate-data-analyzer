@@ -506,7 +506,7 @@
 
 		</div>
 		<div id="sidebar" class="view-divider" style="width: 450px; height: 400px;">
-			<div class="view-title">Feaure Comaprison Per Quality</div>
+			<div class="view-title">Feaure Comparison Per Quality</div>
 			<div id="radar-view">
 				{#if showRadar == undefined}
 					<p id="radar-text">Select features to show radar chart</p>
