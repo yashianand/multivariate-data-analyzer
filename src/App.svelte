@@ -116,7 +116,7 @@
 		// set the features and margins of the graph
 		const margin = {top: 10, right: 5, bottom: 20, left: 30},
 		width = 850 - margin.left - margin.right,
-		height = 350 - margin.top - margin.bottom;
+		height = 430 - margin.top - margin.bottom;
 
 		// append the svg object to the body of the page
 		const svg = d3.select("#parallel")
@@ -516,27 +516,27 @@
 		</div>
 		<div class="view-Corr" id="main-section" style="width: 1000px;">
 			<div class="view-title">Compare Wine Quality</div>
-			<svg >
+			<svg height=400>
 				<g>
-					<text x=20 y=50>Quality</text>
+					<text x=930 y=210>Quality</text>
 					{#each corr_array as corr_val, index}
 						<g id="corr-{index}">
-							<foreignObject x={chartSpread(index)+80} y=0 width="85" height="150" >
-								<div x={(index+0.5)*100} y=15 style="font-size: 10px;">
+							<foreignObject x={chartSpread(index)+20} y=120 width="75" height="15" >
+								<div x={(index+0.5)*100} y=105 style="font-size: 10px;">
 									{features[index]}
 								</div>
 							</foreignObject>
 							<rect
-								x={chartSpread(index)+80}
-								y=25
-								width=80 height=40
+								x={chartSpread(index)+10}
+								y=140
+								width=70 height=130
 								stroke-width = '2'
 								stroke = 'gray'
 								style="
 									fill: {corrColorScheme(corr_val)};"
 								on:click={radarClick(corr_val, features[index], this)}
 							/>
-							<text x={chartSpread(index)+100} y=50>{corr_val}</text>
+							<text x={chartSpread(index)+30} y=210>{corr_val}</text>
 						</g>
 					{/each}
 				</g>
