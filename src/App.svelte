@@ -399,7 +399,8 @@
 					for (let j = 0; j < radar_labels.length; ++j) {
 						if (radar_labels[j] == feature) {
 							let norm_feature_value = feature_value / norm[feature]
-							quality_dict['data'].push(norm_feature_value)
+							quality_dict['data'].unshift(norm_feature_value)
+							console.log(quality_dict['data'])
 						}
 					}
 				}
