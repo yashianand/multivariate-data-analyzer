@@ -52,11 +52,12 @@
 	}
 
 	function predictPressed(){
-		console.log('PREDICT PRESSED!')
+		// console.log('PREDICT PRESSED!')
 		for( const label in features) {
 			let id = "slider-" + features[label]
 			var slider = document.getElementById(id)
 			let value= slider.value.toString();
+			console.log("hello")
 			userEnteredSample[features[label]] = value
 			slider_values.push(value)
 			slider_values = slider_values
@@ -86,14 +87,23 @@
 	}
 
 	function calculateKNearest(k){
+
 		let distanceToAll = []
 		for (const ins in instances) {
 			let distance = calculateDistance(userEnteredSample, instances[ins])
 			let json_dist = instances[ins]
-			// json_dist["distance"] = distance
+			json_dist["distance"] = distance
+			// console.log("json_dist: ", json_dist)
 			distanceToAll.push(json_dist)
+			// console.log("distanceToAll: ", distanceToAll)
 		}
 		distanceToAll.sort(compare)
+
+		console.log("yeeee1", instances)
+
+		distanceToAll.map(x => delete x['distance'])
+		console.log("yeeee2", instances)
+
 
 		if (k!==0){
 			return distanceToAll.slice(0, k)
@@ -201,6 +211,10 @@
 				}
 			));
 		}
+
+
+
+
 		// Draw the lines
 		svg
 			.selectAll("myPath")
