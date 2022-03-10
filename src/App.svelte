@@ -23,10 +23,43 @@
 	let radar_arr = [];
 	let new_radar_arr = [];
 	console.log(radar_arr)
+	let userEnteredSample = {
+		"Id": "NA",
+		"fixed acidity": "13",
+		"volatile acidity": "1.5",
+		"citric acid": "0.8",
+		"residual sugar": "0.97",
+		"chlorides": "0.4",
+		"free sulfur dioxide": "50",
+		"total sulfur dioxide": "200",
+		"density": "1",
+		"pH": "3",
+		"sulphates": "1",
+		"alcohol": "10",
+		"quality": "NA"
+	}
 
 
+	function convertJsonToArray(json_var){
+		delete json_var.Id
+		delete json_var.quality
+		let result = []
 
+		for(var i in json_var){
+    		result.push(json_var[i]);
+		}
+		return result
+	}
 
+	function calculateDistance(a, b){
+		var array_a = convertJsonToArray(a)
+		var array_b = convertJsonToArray(b)
+		
+	}
+
+	function calculateKNearest(){
+
+	}
 
 	function setupParallelCoordinates(){
 		// set the features and margins of the graph
@@ -254,7 +287,7 @@
 		else {
 			radar_arr.push(corr_val)
 			x.setAttribute('stroke-width', '5')
-			x.setAttribute('stroke', 'green')
+			x.setAttribute('stroke', '#1DB954')
 		}
 		radar_arr = radar_arr
 
@@ -313,7 +346,7 @@
 			});
 		}
 
-		setupRadarChart()
+	setupRadarChart()
 
 	}
 
@@ -330,10 +363,10 @@
 					<svg height="380" width="441">
 						{#each features as label,i}
 							<text x="10" y="{i*30+15}" width="80%" height="10">{label}</text>
+							<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
 							<foreignObject x="170" y="{i*30}" width="170" height="30">
 									<input type="range" min="0" max="30" value="0" class="slider" id="myRange">
-								</foreignObject>
-								<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
+							</foreignObject>
 						{/each}
 						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
 						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
