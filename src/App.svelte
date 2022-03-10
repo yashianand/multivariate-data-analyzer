@@ -19,7 +19,7 @@
 	let chartSpread, chartSpreadTicks, featureScale;
 	$: filteredClasses = [] //by default we are showing all the classes
 	const numClasses = 6;
-	let key;
+	let key, value;
 	let radar_arr = [];
 	let new_radar_arr = [];
 	console.log(radar_arr)
@@ -222,7 +222,6 @@
 		xScale = scaleLinear().range([0, 50])
 		xScaleTicks = xScale.ticks(2)
 		console.log('filtered classes', filteredClasses)
-		setupRadarChart()
 		setupParallelCoordinates()
 
 		yScale = scaleLinear().range([0, 500])
