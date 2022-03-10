@@ -25,22 +25,17 @@
 	let radar_arr = [];
 	let new_radar_arr = [];
 	console.log(radar_arr)
-	let userEnteredSample = {
-		"Id": "NA",
-		"fixed acidity": "13",
-		"volatile acidity": "1.5",
-		"citric acid": "0.8",
-		"residual sugar": "0.97",
-		"chlorides": "0.4",
-		"free sulfur dioxide": "50",
-		"total sulfur dioxide": "200",
-		"density": "1",
-		"pH": "3",
-		"sulphates": "1",
-		"alcohol": "10",
-		"quality": "0"
-	}
+	let userEnteredSample;
 
+	function predictPressed(){
+		console.log('PREDICT PRESSED!')
+		for( const label in features) {
+			let id = "slider-" + features[label]
+			var slider = document.getElementById(id)
+			userEnteredSample[features[label]] = slider.value;
+		}
+		console.log('ENTERED SAMPLE: ', userEnteredSample)
+	}
 
 	function convertJsonToArray(json_var){
 		let result = []
@@ -396,14 +391,16 @@
 				<div id="input-view-content">
 					<svg height="380" width="441">
 						{#each features as label,i}
-							<text x="10" y="{i*30+15}" width="80%" height="10">{label}</text>
+							<text x="15" y="{i*30+18}" width="80%" height="10">{label}</text>
 							<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
 							<foreignObject x="170" y="{i*30}" width="170" height="30">
-									<input type="range" min="0" max="30" value="0" class="slider" id="myRange">
+								{#if minMax !== undefined}
+									<input type="range" min={minMax[label].Min} max={minMax[label].Max} value="0" class="slider" id={"slider-" + label}>
+								{/if}
 							</foreignObject>
 						{/each}
-						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
-						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
+						<rect x="10" y="330" width="300" height="30" fill="red" on:click={()=>{ predictPressed() }}></rect>
+						<text x="90" y="350" width="300" height="30" fill="white" on:click={()=>{ predictPressed() }}>Predict Quality</text>
 					</svg>
 
 				</div>
