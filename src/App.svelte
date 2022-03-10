@@ -47,16 +47,7 @@
 		var data;
 		if (selectedToggle == 0) {
 			data = instances.filter(function (sample){
-				// return sample.quality == 8
-				// for (let sample_val in sample) {
-				// 	if (sample_val.quality in filteredClasses) {
-				// 		console.log("in filtered classes array")
-				// 	}
-				// 	else {
-				// 		return sample_val.quality
-				// 	}
-				// }
-				return !filteredClasses.includes(sample.quality)
+				return !filteredClasses.includes(parseInt(sample.quality))
 			});
 		} else {
 			data = comparison_values
@@ -187,7 +178,6 @@
 	}
 
 	function filterClass(selectedClass){
-		selectedClass = (selectedClass).toString()
 		filteredClasses.includes(selectedClass)? filteredClasses.splice(filteredClasses.indexOf(selectedClass), 1) : filteredClasses.push(selectedClass)
 		console.log(filteredClasses)
 	}
@@ -373,16 +363,19 @@
 				<div id="parallel" style="float: left;"></div>
 				<div style="float: right;">
 					<svg width=110 height=300>
-						<text x="0" y="20" class="small">Filter Classes</text>
+						<text x="0" y="20" class="small">Filter Qualities</text>
 						{#each colors as color, i}
 							<rect x=0 y={(i+1)*30} width=20 height=20 fill={color} ></rect>
-							<text x="25" y={200 - (i*31)} class="small">{i + 3}</text>
-							<image x=0 y={(i+1)*30} href={filteredClasses.includes((i+3).toString())? "" : "static/black-checkmark.png"} height="20" width="20" on:click={()=>{
-								console.log('i: ', i)
-								filterClass(8-i)
-								document.getElementById("parallel").innerHTML = ""
-								setupParallelCoordinates();
-							}}/>
+							{#if filteredClasses}
+								<foreignObject x="4" y={(i+1)*30} width="160" height="160">
+									<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="background-color: red" checked="checked" on:click={()=>{
+										console.log('i: ', i)
+										filterClass(8-i)
+										document.getElementById("parallel").innerHTML = ""
+										setupParallelCoordinates();
+									}}> Quality {8-i}
+								</foreignObject>
+							{/if}
 						{/each}
 					</svg>
 				</div>
