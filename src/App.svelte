@@ -510,6 +510,9 @@
 								</foreignObject>
 							{/if}
 						{/each}
+						
+						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
+						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
 					</svg>
 				</div>
 			</div>
