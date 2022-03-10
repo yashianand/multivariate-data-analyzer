@@ -451,8 +451,8 @@
 					<svg height="500" width="441">
 						{#each features as label,i}
 							<text x="15" y="{i*37+20}" width="80%" height="10">{label}</text>
-							{#if slider_values !== undefined}
-								<text id={"output-" + label} x="350" y="{i*37+25}" width="80%" height="10">0</text>
+							{#if slider_values !== undefined && minMax!==undefined}
+								<text id={"output-" + label} x="350" y="{i*37+25}" width="80%" height="10">{minMax[label].Min}</text>
 
 							{/if}
 							<foreignObject x="170" y="{i*37}" width="170" height="30">
