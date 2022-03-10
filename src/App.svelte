@@ -430,19 +430,18 @@
 	<h1>Multivariate Data Analyzer</h1>
 
 	<div id="container">
-		<div id="sidebar" style="width: 450px; height: 400px;">
+		<div id="sidebar" style="width: 450px; height: 500px;">
 			<div id="input-view" class="view-panel">
 				<div class="view-title">Input View</div>
 				<div id="input-view-content">
-					<svg height="400" width="441">
+					<svg height="500" width="441">
 						{#each features as label,i}
-							<text x="15" y="{i*30+18}" width="80%" height="10">{label}</text>
+							<text x="15" y="{i*37+20}" width="80%" height="10">{label}</text>
 							{#if slider_values !== undefined}
-								<!-- <text id="demo" x="350" y="{i*30+20}" width="80%" height="10">{slider_values[i]}</text> -->
-								<text id={"output-" + label} x="350" y="{i*30+20}" width="80%" height="10">0</text>
+								<text id={"output-" + label} x="350" y="{i*37+25}" width="80%" height="10">0</text>
 
 							{/if}
-							<foreignObject x="170" y="{i*30}" width="170" height="30">
+							<foreignObject x="170" y="{i*37}" width="170" height="30">
 								{#if minMax !== undefined}
 									<input type="range" min={minMax[label].Min} max={minMax[label].Max} value="0" class="slider" id={"slider-" + label} on:input={
 									changeSlider}>
@@ -450,8 +449,8 @@
 								{/if}
 							</foreignObject>
 						{/each}
-						<rect x="10" y="330" width="400" height="30" fill="red" on:click={()=>{ predictPressed() }}></rect>
-						<text x="160" y="350" width="400" height="30" fill="white" on:click={()=>{ predictPressed() }}>Predict Quality</text>
+						<rect x="10" y="410" width="400" height="30" fill="red" on:click={()=>{ predictPressed() }}></rect>
+						<text x="160" y="430" width="400" height="30" fill="white" on:click={()=>{ predictPressed() }}>Predict Quality</text>
 					</svg>
 
 				</div>
