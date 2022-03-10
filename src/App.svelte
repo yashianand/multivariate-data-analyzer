@@ -25,16 +25,43 @@
 	let radar_arr = [];
 	let new_radar_arr = [];
 	console.log(radar_arr)
-	let userEnteredSample;
+	let slider_values = [];
+	let userEnteredSample = {
+		"Id": "NA",
+		"fixed acidity": "4.6",
+		"volatile acidity": "0.12",
+		"citric acid": "0",
+		"residual sugar": "0.9",
+		"chlorides": "0.012",
+		"free sulfur dioxide": "1",
+		"total sulfur dioxide": "6",
+		"density": "0.99007",
+		"pH": "2.74",
+		"sulphates": "0.33",
+		"alcohol": "8.4",
+		"quality": "2"
+	}
+
+	
+
+	function changeSlider(value, x){
+		console.log('value changed: ', value)
+		slider_values = slider_values
+	}
 
 	function predictPressed(){
 		console.log('PREDICT PRESSED!')
 		for( const label in features) {
 			let id = "slider-" + features[label]
 			var slider = document.getElementById(id)
-			userEnteredSample[features[label]] = slider.value;
+			let value= slider.value.toString();
+			userEnteredSample[features[label]] = value
+			slider_values.push(value)
+			slider_values = slider_values
 		}
 		console.log('ENTERED SAMPLE: ', userEnteredSample)
+		document.getElementById("parallel").innerHTML = ""
+		setupParallelCoordinates()
 	}
 
 	function convertJsonToArray(json_var){
@@ -65,6 +92,7 @@
 			distanceToAll.push(json_dist)
 		}
 		distanceToAll.sort(compare)
+		
 		if (k!==0){
 			return distanceToAll.slice(0, k)
 		} 
@@ -304,6 +332,7 @@
 
 		corrColorScheme = scaleLinear().domain([ Math.min(...corr_array), 0, Math.max(...corr_array) ]).range(["red", "#ddd", "blue"]);
 	});
+	
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	function radarClick(corr_val, feature_name, x) {
@@ -392,15 +421,21 @@
 					<svg height="380" width="441">
 						{#each features as label,i}
 							<text x="15" y="{i*30+18}" width="80%" height="10">{label}</text>
-							<text x="350" y="{i*30+20}" width="80%" height="10">0</text>
+							{#if slider_values !== undefined}
+								<!-- <text id="demo" x="350" y="{i*30+20}" width="80%" height="10">{slider_values[i]}</text> -->
+								<text id="demo" x="350" y="{i*30+20}" width="80%" height="10">0</text>
+
+							{/if}
 							<foreignObject x="170" y="{i*30}" width="170" height="30">
 								{#if minMax !== undefined}
-									<input type="range" min={minMax[label].Min} max={minMax[label].Max} value="0" class="slider" id={"slider-" + label}>
+									<input type="range" min={minMax[label].Min} max={minMax[label].Max} value="0" class="slider" id={"slider-" + label} on:input={ 
+									changeSlider}>
+									<!-- <output> -->
 								{/if}
 							</foreignObject>
 						{/each}
-						<rect x="10" y="330" width="300" height="30" fill="red" on:click={()=>{ predictPressed() }}></rect>
-						<text x="90" y="350" width="300" height="30" fill="white" on:click={()=>{ predictPressed() }}>Predict Quality</text>
+						<rect x="10" y="330" width="400" height="30" fill="red" on:click={()=>{ predictPressed() }}></rect>
+						<text x="160" y="350" width="400" height="30" fill="white" on:click={()=>{ predictPressed() }}>Predict Quality</text>
 					</svg>
 
 				</div>
@@ -424,13 +459,13 @@
 					document.getElementById("parallel").innerHTML = ""
 					setupParallelCoordinates()
 				}}> Show Average Lines Per Quality
-				{#if userEnteredSample !== undefined}
-					<input type="radio" id="knn" name="fav_language" value="knn" on:click={()=>{
-						selectedToggle = 2
-						document.getElementById("parallel").innerHTML = ""
-						setupParallelCoordinates()
-					}}> Nearest Wine Samples To Entered Sample
-				{/if}
+				<input type="radio" id="knn" name="fav_language" value="knn" on:click={()=>{
+					selectedToggle = 2
+					document.getElementById("parallel").innerHTML = ""
+					setupParallelCoordinates()
+				}}> Nearest Wine Samples To Entered Sample
+				<!-- {#if userEnteredSample !== undefined}
+				{/if} -->
 
 				<div id="parallel" style="float: left;"></div>
 				<div style="float: right;">
