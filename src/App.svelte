@@ -42,7 +42,7 @@
 		"quality": "2"
 	}
 
-	
+
 
 	function changeSlider(value, x){
 		let slider_id = value.target.id
@@ -94,12 +94,13 @@
 			distanceToAll.push(json_dist)
 		}
 		distanceToAll.sort(compare)
-		
+
 		if (k!==0){
 			return distanceToAll.slice(0, k)
-		} 
+		}
 		return distanceToAll
 	}
+	let showRadar;
 
 	function compare(a,b) {
 		if ( a.distance < b.distance ){
@@ -110,7 +111,7 @@
 		}
 		return 0;
 	}
-	
+
 	function setupParallelCoordinates(){
 		// set the features and margins of the graph
 		const margin = {top: 10, right: 5, bottom: 20, left: 30},
@@ -128,22 +129,22 @@
 
 		// Parse the Data
 		var data;
-		if (selectedToggle == 0) {
-			data = instances.filter(function (sample){
-				return !filteredClasses.includes(parseInt(sample.quality))
-			});
-		} else if (selectedToggle == 1){
-			data = comparison_values
-		} else {
-			let  k = 10
-			data = calculateKNearest(k)
-			let sum = 0
-			for(const dddd in data){
-				sum += parseInt(data[dddd].quality) 
-			}
-			userEnteredSample.quality = (sum/k).toString()
-			data.push(userEnteredSample)
-		}
+        if (selectedToggle == 0) {
+            data = instances.filter(function (sample){
+                return !filteredClasses.includes(parseInt(sample.quality))
+            });
+        } else if (selectedToggle == 1){
+            data = comparison_values
+        } else {
+            let  k = 10
+            data = calculateKNearest(k)
+            let sum = 0
+            for(const dddd in data){
+                sum += parseInt(data[dddd].quality)
+            }
+            userEnteredSample.quality = (sum/k).toString()
+            data.push(userEnteredSample)
+        }
 
 
 		// Color scale: give me a specie name, I return a color
@@ -200,7 +201,6 @@
 				}
 			));
 		}
-
 		// Draw the lines
 		svg
 			.selectAll("myPath")
@@ -236,7 +236,7 @@
 	function setupComparisonView() {
 		for (let k = 3; k < numClasses+3; ++k){
 			let average_value = {};
-			average_value['quality'] = k
+			average_value['quality'] = k.toString()
 			instances.forEach(instance => {
 				if(instance['Id'] == k) {
 					for (let key in instance) {
@@ -252,7 +252,6 @@
 				if(instance['quality'] == k) {
 					for (let key in instance) {
 						if (key !== 'Id' && key !== 'quality'){
-							// console.log("here: ", instance['Id'], key, instance[key], )
 							average_value[key] += Number(instance[key])
 						}
 					}
@@ -334,20 +333,21 @@
 
 		corrColorScheme = scaleLinear().domain([ Math.min(...corr_array), 0, Math.max(...corr_array) ]).range(["red", "#ddd", "blue"]);
 	});
-	
+
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	function radarClick(corr_val, feature_name, x) {
-
 		if (radar_arr.includes(corr_val)) {
 			radar_arr.pop(corr_val)
 			x.setAttribute('stroke-width', '2')
 			x.setAttribute('stroke', 'gray')
 		}
 		else {
-			radar_arr.push(corr_val)
-			x.setAttribute('stroke-width', '5')
-			x.setAttribute('stroke', '#1DB954')
+			if (radar_arr.length < 6) {
+				radar_arr.push(corr_val)
+				x.setAttribute('stroke-width', '5')
+				x.setAttribute('stroke', 'green')
+			}
 		}
 		radar_arr = radar_arr
 
@@ -355,50 +355,63 @@
 			radar_labels.pop(feature_name)
 		}
 		else {
-			radar_labels.push(feature_name)
+			if (radar_labels.length < 6) {
+				radar_labels.push(feature_name)
+			}
 		}
 		radar_labels = radar_labels
 
-// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		function setupRadarChart(){
+			let radar_colors = ["#FEE5D9", "#FCBBA1", "#FC9272", "#FB6A4A",  "#DE2D26", "#A50F15"]
 			var marksCanvas = document.getElementById("marksChart");
-			if (radar_arr.length > 6) {
-				new_radar_arr = radar_arr.slice(0, 6)
+			// normalization
+			let norm = {}
+			for (let i = 0; i < comparison_values.length; ++i) {
+				for (const [feature, feature_value] of Object.entries(comparison_values[i])) {
+					if (feature !== 'quality') {
+						norm[feature] = 0
+					}
+				}
 			}
+			for (let i = 0; i < comparison_values.length; ++i) {
+				for (const [feature, feature_value] of Object.entries(comparison_values[i])) {
+					if (feature !== 'quality') {
+						if (feature_value > norm[feature]){
+							norm[feature] = feature_value
+						}
+					}
+				}
+			}
+			console.log("norm: ", norm)
 
 			for (let i=0; i < 6; ++i) {
-				let idx = corr_array.indexOf(radar_arr[i])
-				console.log("idx: " ,idx)
+				showRadar = i
+			}
+			let final_dataset_array = []
+			for (let i=0; i < comparison_values.length; ++i) {
+				let quality_dict = {
+					'label': 'Quality'+[i+3],
+					'backgroundColor': "rgba(165,15,21,0)",
+					'borderColor': radar_colors[i],
+					'data': []
+				}
+				for (const [feature, feature_value] of Object.entries(comparison_values[i])) {
+					for (let j = 0; j < radar_labels.length; ++j) {
+						if (radar_labels[j] == feature) {
+							let norm_feature_value = feature_value / norm[feature]
+							quality_dict['data'].push(norm_feature_value)
+						}
+					}
+				}
+				final_dataset_array.push(quality_dict)
 			}
 
 			var marksData = {
 				labels: radar_labels.slice(0, 6),
-				datasets: [{
-					label: "Quality 8",
-					backgroundColor: "rgba(165,15,21,0.5)",
-					// data: [1, 0.5917909543, 0.9977424972, 0.4786131524, 0.9615133085, 1]
-				}, {
-					label: "Quality 7",
-					backgroundColor: "rgba(222,45,38,0.5)",
-					// data: [0.9480313834, 0.6196717882, 0.9986368143, 0.4566643279, 0.9684384252, 0.9592565098]
-				}, {
-					label: "Quality 6",
-					backgroundColor: "rgba(251,106,74,0.5)",
-					// data: [0.8788761964,0.7231826107,0.9991489043,0.5624469486,0.9764779577,0.700119336]
-				}, {
-					label: "Quality 5",
-					backgroundColor: "rgba(252,146,114,0.5)",
-					// data: [0.8185333654, 1, 0.9996387108, 0.6523924432, 0.9726158343, 0.6230601722]
-				}, {
-					label: "Quality 4",
-					backgroundColor: "rgba(252,187,161,0.5)",
-					// data: [0.848744594, 0.6413510818, 0.9990761098, 0.7845814179, 0.9951469788, 0.4452722985]
-				}, {
-					label: "Quality 3",
-					backgroundColor: "rgba(254,229,217,0.8)",
-					// data: [0.8231051906, 0.4405991789, 1, 1, 1, 0.4372159091]
-				}]
+				datasets:  final_dataset_array
 			};
+			console.log("dataset: ", marksData)
+
 
 			var radarChart = new Chart(marksCanvas, {
 				type: 'radar',
@@ -416,11 +429,11 @@
 	<h1>Multivariate Data Analyzer</h1>
 
 	<div id="container">
-		<div id="sidebar" style="width: 450px;">
+		<div id="sidebar" style="width: 450px; height: 400px;">
 			<div id="input-view" class="view-panel">
 				<div class="view-title">Input View</div>
 				<div id="input-view-content">
-					<svg height="380" width="441">
+					<svg height="400" width="441">
 						{#each features as label,i}
 							<text x="15" y="{i*30+18}" width="80%" height="10">{label}</text>
 							{#if slider_values !== undefined}
@@ -430,7 +443,7 @@
 							{/if}
 							<foreignObject x="170" y="{i*30}" width="170" height="30">
 								{#if minMax !== undefined}
-									<input type="range" min={minMax[label].Min} max={minMax[label].Max} value="0" class="slider" id={"slider-" + label} on:input={ 
+									<input type="range" min={minMax[label].Min} max={minMax[label].Max} value="0" class="slider" id={"slider-" + label} on:input={
 									changeSlider}>
 									<!-- <output> -->
 								{/if}
@@ -442,10 +455,7 @@
 
 				</div>
 			</div>
-			<div id="radar-view" class="view-panel">
-				<div class="view-title">Radar Chart</div>
-				<canvas id="marksChart" width="600" height="400"></canvas>
-			</div>
+
 		</div>
 		<div id="main-section" >
 			<div id="parcoord-view" class="view-panel" style="width: 980px;">
@@ -489,40 +499,51 @@
 					</svg>
 				</div>
 			</div>
-<!-- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-
-			<div id="comparison-view" class="view-panel" >
-				<div class="view-title">Compare Wine Quality</div>
-					<div class="view-barChart">
-						<svg viewbox="0 0 980 250" >
-							<g>
-								<text x=20 y=50>Quality</text>
-								{#each corr_array as corr_val, index}
-								<g id="corr-{index}">
-									<foreignObject x={chartSpread(index)+80} y=0 width="85" height="150" >
-										<div x={(index+0.5)*100} y=15 style="font-size: 10px;">
-											{features[index]}
-										</div>
-									</foreignObject>
-									<rect
-										x={chartSpread(index)+80}
-										y=25
-										width=80 height=40
-										stroke-width = '2'
-										stroke = 'gray'
-										style="
-											fill: {corrColorScheme(corr_val)};"
-										on:click={radarClick(corr_val, features[index], this)}
-									/>
-									<text x={chartSpread(index)+100} y=50>{corr_val}</text>
-								</g>
-								{/each}
-							</g>
-						</svg>
-					</div>
-			</div>
 		</div>
 	</div>
+	<div id="container" class="view-bottom-panel" style="width: 1500px;">
+		<div id="title">
+
+		</div>
+		<div id="sidebar" class="view-divider" style="width: 450px; height: 400px;">
+			<div class="view-title">Radar Chart</div>
+			<div id="radar-view">
+				{#if showRadar == undefined}
+					<p id="radar-text">Select features to show radar chart</p>
+				{/if}
+				<canvas id="marksChart" width="200" height="160"></canvas>
+			</div>
+		</div>
+		<div class="view-Corr" id="main-section" style="width: 1000px;">
+			<div class="view-title">Compare Wine Quality</div>
+			<svg >
+				<g>
+					<text x=20 y=50>Quality</text>
+					{#each corr_array as corr_val, index}
+						<g id="corr-{index}">
+							<foreignObject x={chartSpread(index)+80} y=0 width="85" height="150" >
+								<div x={(index+0.5)*100} y=15 style="font-size: 10px;">
+									{features[index]}
+								</div>
+							</foreignObject>
+							<rect
+								x={chartSpread(index)+80}
+								y=25
+								width=80 height=40
+								stroke-width = '2'
+								stroke = 'gray'
+								style="
+									fill: {corrColorScheme(corr_val)};"
+								on:click={radarClick(corr_val, features[index], this)}
+							/>
+							<text x={chartSpread(index)+100} y=50>{corr_val}</text>
+						</g>
+					{/each}
+				</g>
+			</svg>
+		</div>
+	</div>
+
 </main>
 <!--  -->
 
@@ -535,7 +556,7 @@
 	#container {
 		display: flex;
 	}
-	#sidebar, #main-section {
+	#sidebar, #main-section, #title {
 		display: flex;
 		flex-direction: column;
 	}
@@ -543,8 +564,20 @@
 		border: 2px solid #eee;
 		margin-bottom: 15px;
 		margin-right: 15px;
-		height: 70%;
+		height: 100%;
 		width: 98%;
+	}
+	.view-divider {
+		border-right: 2px solid #eee;
+		margin-right: 0px;
+		height: 100%;
+	}
+	.view-bottom-panel {
+		border: 2px solid #eee;
+		margin-bottom: 15px;
+		margin-right: 15px;
+		width: 100%;
+
 	}
 	.view-title {
 		background-color: #f3f3f3;
@@ -552,33 +585,16 @@
 		margin-bottom: 1px;
 		padding: 3px 4px 4px 4px;
 	}
-	.quality-selection {
-		height: 250px;
-		width: 110px;
-		padding-top: 10px;
-		padding-left: 10px;
-	}
-	.view-barChart {
-		height: 250px;
-		width: 980px;
-		padding: 10 10 10 10;
-	}
 	#input-view-content {
 		height: 380px;
 	}
-	#comp-view {
-		font-size: 11px;
-		width: 10px;
-		overflow-wrap: break-word;
+	#radar-text {
+		font-size: medium;
+		color: gray;
+		text-align: center;
 	}
-	#axis {
-		stroke: black;
-	}
-	#quality-text {
-		border: 1px;
-		border-style: solid;
-		border-color: black;
-		border-left: none;
-	}
+
+
+
 
 </style>
