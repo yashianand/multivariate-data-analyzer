@@ -427,12 +427,12 @@
 </script>
 
 <main>
-	<h1>Multivariate Data Analyzer</h1>
+	<h1>Multivariate Red Wine Data Analyzer</h1>
 
 	<div id="container">
 		<div id="sidebar" style="width: 450px; height: 500px;">
 			<div id="input-view" class="view-panel">
-				<div class="view-title">Input View</div>
+				<div class="view-title">User Input</div>
 				<div id="input-view-content">
 					<svg height="500" width="441">
 						{#each features as label,i}
@@ -459,7 +459,7 @@
 		</div>
 		<div id="main-section" >
 			<div id="parcoord-view" class="view-panel" style="width: 980px;">
-				<div class="view-title">Parallel Coordinates</div>
+				<div class="view-title">Overall Dataset Insights</div>
 
 				<input type="radio" id="all" name="fav_language" value="all" style="margin-left: 35px;" checked="checked" on:click={()=>{
 					selectedToggle = 0
@@ -501,12 +501,12 @@
 			</div>
 		</div>
 	</div>
-	<div id="container" class="view-bottom-panel" style="width: 1500px;">
+	<div id="container" class="view-bottom-panel" style="width: 1430px;">
 		<div id="title">
 
 		</div>
 		<div id="sidebar" class="view-divider" style="width: 450px; height: 400px;">
-			<div class="view-title">Radar Chart</div>
+			<div class="view-title">Feaure Comaprison Per Quality</div>
 			<div id="radar-view">
 				{#if showRadar == undefined}
 					<p id="radar-text">Select features to show radar chart</p>
@@ -518,7 +518,7 @@
 			<div class="view-title">Compare Wine Quality</div>
 			<svg height=400>
 				<g>
-					<text x=930 y=210>Quality</text>
+					<text x=900 y=210>Quality</text>
 					{#each corr_array as corr_val, index}
 						<g id="corr-{index}">
 							<foreignObject x={chartSpread(index)+20} y=120 width="75" height="15" >
