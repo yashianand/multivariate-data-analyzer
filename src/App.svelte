@@ -524,6 +524,7 @@
 			<div id="radar-view">
 				{#if showRadar == undefined}
 					<p id="radar-text">Select features to show radar chart</p>
+					<img src="static/empty.jpg" alt="Girl in a jacket" width="300" height="300" style="margin-left:70px;">
 				{/if}
 				<canvas id="marksChart" width="200" height="160"></canvas>
 			</div>
