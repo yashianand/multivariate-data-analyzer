@@ -1,8 +1,10 @@
 <script>
 	import { onMount } from "svelte";
 	import { scaleLinear, scaleSequential, scalePoint } from "d3-scale";
-	import { interpolateRdBu } from "d3-scale-chromatic";
+	import { create, all } from 'mathjs'
 
+	const config = { }
+	const math = create(all, config)
 	let instances;
 	let wineQualities = {};
 	let features = ["alcohol", "total sulfur dioxide", "density", "volatile acidity", "pH", "citric acid", "fixed acidity", "residual sugar", "chlorides", "free sulfur dioxide", "sulphates", "quality"]
@@ -10,12 +12,12 @@
 	let minMax;
 	let correlation_dict = {};
 	let corr_array = [];
-	let selectedToggle = 0
+	let selectedToggle = 0 //it can be 0, 1 or 2
 	let comparison_values = [];
 	let items = [];
 	let corrColorScheme;
 	let xScale, xScaleTicks, yScale, yScaleTicks;
-	let colors = ["#A50F15", "#DE2D26", "#FB6A4A", "#FC9272", "#FCBBA1", "#FEE5D9"]
+	let colors = ["#A50F15", "#DE2D26", "#FB6A4A", "#FC9272", "#FCBBA1", "#FEE5D9", "blue"]
 	let chartSpread, chartSpreadTicks, featureScale;
 	$: filteredClasses = [] //by default we are showing all the classes
 	const numClasses = 6;
@@ -36,31 +38,54 @@
 		"pH": "3",
 		"sulphates": "1",
 		"alcohol": "10",
-		"quality": "NA"
+		"quality": "0"
 	}
 
 
 	function convertJsonToArray(json_var){
-		delete json_var.Id
-		delete json_var.quality
 		let result = []
 
 		for(var i in json_var){
     		result.push(json_var[i]);
 		}
+		result.shift();
+		result.splice(-1)
 		return result
 	}
 
 	function calculateDistance(a, b){
-		var array_a = convertJsonToArray(a)
-		var array_b = convertJsonToArray(b)
-		
+		var array_a = convertJsonToArray(a).map(x => parseFloat(x))
+		var array_b = convertJsonToArray(b).map(x => parseFloat(x))
+
+		let result = math.distance(array_a, array_b)
+		return result
 	}
 
-	function calculateKNearest(){
-
+	function calculateKNearest(k){
+		let distanceToAll = []
+		for (const ins in instances) {
+			let distance = calculateDistance(userEnteredSample, instances[ins])
+			let json_dist = instances[ins]
+			// json_dist["distance"] = distance
+			distanceToAll.push(json_dist)
+		}
+		distanceToAll.sort(compare)
+		if (k!==0){
+			return distanceToAll.slice(0, k)
+		} 
+		return distanceToAll
 	}
 
+	function compare(a,b) {
+		if ( a.distance < b.distance ){
+			return -1;
+		}
+		if ( a.distance > b.distance ){
+			return 1;
+		}
+		return 0;
+	}
+	
 	function setupParallelCoordinates(){
 		// set the features and margins of the graph
 		const margin = {top: 10, right: 5, bottom: 20, left: 30},
@@ -82,8 +107,17 @@
 			data = instances.filter(function (sample){
 				return !filteredClasses.includes(parseInt(sample.quality))
 			});
-		} else {
+		} else if (selectedToggle == 1){
 			data = comparison_values
+		} else {
+			let  k = 10
+			data = calculateKNearest(k)
+			let sum = 0
+			for(const dddd in data){
+				sum += parseInt(data[dddd].quality) 
+			}
+			userEnteredSample.quality = (sum/k).toString()
+			data.push(userEnteredSample)
 		}
 
 
@@ -393,6 +427,14 @@
 					document.getElementById("parallel").innerHTML = ""
 					setupParallelCoordinates()
 				}}> Show Average Lines Per Quality
+				{#if userEnteredSample !== undefined}
+					<input type="radio" id="knn" name="fav_language" value="knn" on:click={()=>{
+						selectedToggle = 2
+						document.getElementById("parallel").innerHTML = ""
+						setupParallelCoordinates()
+					}}> Nearest Wine Samples To Entered Sample
+				{/if}
+
 				<div id="parallel" style="float: left;"></div>
 				<div style="float: right;">
 					<svg width=110 height=300>
