@@ -11,7 +11,7 @@
 	let radar_labels = [];
 	let minMax;
 	let correlation_dict = {};
-	let corr_array = [];
+	let corr_array = []
 	let selectedToggle = 0 //it can be 0, 1 or 2
 	let comparison_values = [];
 	let items = [];
