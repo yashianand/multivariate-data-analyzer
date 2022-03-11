@@ -66,6 +66,8 @@
 		selectedToggle = 2
 		console.log('ENTERED SAMPLE: ', userEnteredSample)
 		document.getElementById("parallel").innerHTML = ""
+		let radioButton = document.getElementById("knn");
+		radioButton.checked = true
 		setupParallelCoordinates()
 	}
 
@@ -99,13 +101,9 @@
 			distanceToAll.push(json_dist)
 			// console.log("distanceToAll: ", distanceToAll)
 		}
+
 		distanceToAll.sort(compare)
-
-		console.log("yeeee1", instances)
-
 		distanceToAll.map(x => delete x['distance'])
-		console.log("yeeee2", instances)
-
 
 		if (k!==0){
 			return distanceToAll.slice(0, k)
@@ -154,12 +152,11 @@
             for(const dddd in data){
                 sum += parseInt(data[dddd].quality)
             }
-            userEnteredSample.quality = (sum/k).toString()
+            userEnteredSample.quality = (sum/k).toFixed(1).toString()
 			predictedQuality = (sum/k).toString()
 			predictedQuality = predictedQuality;
             data.push(userEnteredSample)
         }
-
 
 		// Color scale: give me a specie name, I return a color
 		const color = d3.scaleOrdinal()
@@ -320,7 +317,6 @@
 
 		xScale = scaleLinear().range([0, 50])
 		xScaleTicks = xScale.ticks(2)
-		console.log('filtered classes', filteredClasses)
 		setupParallelCoordinates()
 
 		yScale = scaleLinear().range([0, 500])
