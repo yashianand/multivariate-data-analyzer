@@ -24,7 +24,6 @@
 	let key, value;
 	let radar_arr = [];
 	let new_radar_arr = [];
-	console.log(radar_arr)
 	let slider_values = [];
 	var predictedQuality = "";
 	let userEnteredSample = {
@@ -53,18 +52,15 @@
 	}
 
 	function predictPressed(){
-		// console.log('PREDICT PRESSED!')
 		for( const label in features) {
 			let id = "slider-" + features[label]
 			var slider = document.getElementById(id)
 			let value= slider.value.toString();
-			console.log("hello")
 			userEnteredSample[features[label]] = value
 			slider_values.push(value)
 			slider_values = slider_values
 		}
 		selectedToggle = 2
-		console.log('ENTERED SAMPLE: ', userEnteredSample)
 		document.getElementById("parallel").innerHTML = ""
 		let radioButton = document.getElementById("knn");
 		radioButton.checked = true
@@ -97,9 +93,7 @@
 			let distance = calculateDistance(userEnteredSample, instances[ins])
 			let json_dist = instances[ins]
 			json_dist["distance"] = distance
-			// console.log("json_dist: ", json_dist)
 			distanceToAll.push(json_dist)
-			// console.log("distanceToAll: ", distanceToAll)
 		}
 
 		distanceToAll.sort(compare)
@@ -190,10 +184,10 @@
 			.style("stroke", "lightgrey")
 			.style("opacity", "0.2")
 			// Second the hovered specie takes its color
-			d3.selectAll(".line" + selected_quality)
-			.transition().duration(20)
-			.style("stroke", color(selected_quality))
-			.style("opacity", "1")
+			// d3.selectAll(".line" + selected_quality)
+			// .transition().duration(20)
+			// .style("stroke", color(selected_quality))
+			// .style("opacity", "1")
 		}
 
 		// Unhighlight
@@ -285,7 +279,6 @@
 
 	function filterClass(selectedClass){
 		filteredClasses.includes(selectedClass)? filteredClasses.splice(filteredClasses.indexOf(selectedClass), 1) : filteredClasses.push(selectedClass)
-		console.log(filteredClasses)
 	}
 
 	onMount(async () => {
@@ -297,9 +290,6 @@
 
 		const fetched3 = await fetch("static/correlation.json");
 		correlation_dict = (await fetched3.json())
-		console.log("correlation: ", correlation_dict)
-
-		console.log(minMax)
 		for (let k = 3; k < numClasses+3; ++k) {
 			wineQualities[k] = {
 				'instances': []
@@ -310,7 +300,6 @@
 		});
         setupComparisonView()
         comparison_values = comparison_values
-        console.log("Comparison Values: ", comparison_values)
 
         yScale = scaleLinear().domain([0, value]).range([0, 100])
 		yScaleTicks = yScale.ticks(5)
@@ -337,7 +326,6 @@
 			items.push(options)
 		}
 		items = items
-		console.log("Dropdown options: ", items)
 
 		for (let i in correlation_dict['quality']) {
 			corr_array.push(correlation_dict['quality'][i])
@@ -363,7 +351,7 @@
 			if (radar_arr.length < 6) {
 				radar_arr.push(corr_val)
 				x.setAttribute('stroke-width', '5')
-				x.setAttribute('stroke', 'green')
+				x.setAttribute('stroke', 'lightGreen')
 			}
 		}
 		radar_arr = radar_arr
@@ -399,7 +387,6 @@
 					}
 				}
 			}
-			console.log("norm: ", norm)
 
 			for (let i=0; i < 6; ++i) {
 				showRadar = i
@@ -417,7 +404,6 @@
 						if (radar_labels[j] == feature) {
 							let norm_feature_value = feature_value / norm[feature]
 							quality_dict['data'].unshift(norm_feature_value)
-							console.log(quality_dict['data'])
 						}
 					}
 				}
@@ -428,7 +414,6 @@
 				labels: radar_labels.slice(0, 6),
 				datasets:  final_dataset_array
 			};
-			console.log("dataset: ", marksData)
 
 
 			var radarChart = new Chart(marksCanvas, {
@@ -476,36 +461,38 @@
 		</div>
 		<div id="main-section" >
 			<div id="parcoord-view" class="view-panel" style="width: 980px;">
-				<div class="view-title">Overall Dataset Insights</div>
+				<div class="view-title">Overall Dataset Insights - Parallel Coordinates</div>
 
 				<input type="radio" id="all" name="fav_language" value="all" style="margin-left: 35px;" checked="checked" on:click={()=>{
 					selectedToggle = 0
 					document.getElementById("parallel").innerHTML = ""
 					setupParallelCoordinates()
+					document.getElementById("filter-container").style.display = "block";
 				}}> Show All Data Lines
 				<input type="radio" id="avg" name="fav_language" value="avg" on:click={()=>{
 					selectedToggle = 1
 					document.getElementById("parallel").innerHTML = ""
 					setupParallelCoordinates()
+					document.getElementById("filter-container").style.display = "none";
 				}}> Show Average Lines Per Quality
 				<input type="radio" id="knn" name="fav_language" value="knn" on:click={()=>{
 					selectedToggle = 2
 					document.getElementById("parallel").innerHTML = ""
 					setupParallelCoordinates()
+					document.getElementById("filter-container").style.display = "none";
 				}}> Nearest Wine Samples To Entered Sample
 				<!-- {#if userEnteredSample !== undefined}
 				{/if} -->
 
 				<div id="parallel" style="float: left;"></div>
 				<div style="float: right;">
-					<svg width=110 height=300>
+					<svg width=110 height=300 id="filter-container">
 						<text x="0" y="20" class="small">Filter Qualities</text>
 						{#each colors as color, i}
 							<rect x=0 y={(i+1)*30} width=20 height=20 fill={color} ></rect>
 							{#if filteredClasses}
 								<foreignObject x="4" y={(i+1)*30} width="160" height="160">
 									<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="background-color: red" checked="checked" on:click={()=>{
-										console.log('i: ', i)
 										filterClass(8-i)
 										document.getElementById("parallel").innerHTML = ""
 										setupParallelCoordinates();
@@ -536,7 +523,7 @@
 			</div>
 		</div>
 		<div class="view-Corr" id="main-section" style="width: 1000px;">
-			<div class="view-title">Compare Wine Quality</div>
+			<div class="view-title">Compare Wine Quality - Select At Least 3 Features</div>
 			<svg height=400>
 				<g>
 					<text x=900 y=210>Quality</text>
