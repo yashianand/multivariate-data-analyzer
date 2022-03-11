@@ -26,6 +26,7 @@
 	let new_radar_arr = [];
 	console.log(radar_arr)
 	let slider_values = [];
+	var predictedQuality = "";
 	let userEnteredSample = {
 		"Id": "NA",
 		"fixed acidity": "4.6",
@@ -62,6 +63,7 @@
 			slider_values.push(value)
 			slider_values = slider_values
 		}
+		selectedToggle = 2
 		console.log('ENTERED SAMPLE: ', userEnteredSample)
 		document.getElementById("parallel").innerHTML = ""
 		setupParallelCoordinates()
@@ -146,13 +148,15 @@
         } else if (selectedToggle == 1){
             data = comparison_values
         } else {
-            let  k = 10
+            let  k = 20
             data = calculateKNearest(k)
             let sum = 0
             for(const dddd in data){
                 sum += parseInt(data[dddd].quality)
             }
             userEnteredSample.quality = (sum/k).toString()
+			predictedQuality = (sum/k).toString()
+			predictedQuality = predictedQuality;
             data.push(userEnteredSample)
         }
 
@@ -346,7 +350,10 @@
 		radar_arr = radar_arr
 
 		corrColorScheme = scaleLinear().domain([ Math.min(...corr_array), 0, Math.max(...corr_array) ]).range(["red", "#ddd", "blue"]);
+		const sliders = document.querySelectorAll(`[id^="slider"]`);
+		sliders.forEach(slider => slider.step="0.001");
 	});
+
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -464,7 +471,7 @@
 							</foreignObject>
 						{/each}
 						<rect x="10" y="410" width="400" height="30" fill="red" on:click={()=>{ predictPressed() }}></rect>
-						<text x="160" y="430" width="400" height="30" fill="white" on:click={()=>{ predictPressed() }}>Predict Quality</text>
+						<text x="160" y="430" width="400" height="30" fill="white" on:click={()=>{ predictPressed() }}>Predict Quality {predictedQuality}</text>
 					</svg>
 
 				</div>
@@ -523,11 +530,11 @@
 
 		</div>
 		<div id="sidebar" class="view-divider" style="width: 450px; height: 400px;">
-			<div class="view-title">Feaure Comaprison Per Quality</div>
+			<div class="view-title">Feature Comparison Per Quality</div>
 			<div id="radar-view">
 				{#if showRadar == undefined}
 					<p id="radar-text">Select features to show radar chart</p>
-					<img src="static/empty.jpg" alt="Girl in a jacket" width="300" height="300" style="margin-left:70px;">
+					<img src="static/empty.jpg" alt="" width="300" height="300" style="margin-left:70px;">
 				{/if}
 				<canvas id="marksChart" width="200" height="160"></canvas>
 			</div>
