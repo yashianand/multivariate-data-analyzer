@@ -282,13 +282,13 @@
 	}
 
 	onMount(async () => {
-		const fetched = await fetch("static/Wines.json");
+		const fetched = await fetch("./static/Wines.json");
 		instances = (await fetched.json()).data;
 
-		const fetched2 = await fetch("static/minmax.json");
+		const fetched2 = await fetch("./static/minmax.json");
 		minMax = (await fetched2.json())
 
-		const fetched3 = await fetch("static/correlation.json");
+		const fetched3 = await fetch("./static/correlation.json");
 		correlation_dict = (await fetched3.json())
 		for (let k = 3; k < numClasses+3; ++k) {
 			wineQualities[k] = {
@@ -500,7 +500,7 @@
 								</foreignObject>
 							{/if}
 						{/each}
-						
+
 						<rect x="10" y="330" width="300" height="30" fill="red"></rect>
 						<text x="90" y="350" width="300" height="30" fill="white">Predict Quality</text>
 					</svg>
@@ -517,7 +517,7 @@
 			<div id="radar-view">
 				{#if showRadar == undefined}
 					<p id="radar-text">Select features to show radar chart</p>
-					<img src="static/empty.jpg" alt="" width="300" height="300" style="margin-left:70px;">
+					<img src="./static/empty.jpg" alt="" width="300" height="300" style="margin-left:70px;">
 				{/if}
 				<canvas id="marksChart" width="200" height="160"></canvas>
 			</div>
